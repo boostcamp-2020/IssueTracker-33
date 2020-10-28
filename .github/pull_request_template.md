@@ -1,4 +1,4 @@
-[comment]: <> (PR 태그를 명시해주세요. [ADD] / [UPDATE] / [ENV])
+[comment]: <> (PR 태그를 명시해주세요. [ADD] / [UPDATE] / [BUG])
 
 ### 요약
 
