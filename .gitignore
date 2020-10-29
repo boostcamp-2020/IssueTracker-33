@@ -1,2 +1,5 @@
 # Back ignore
 node_modules/
+
+# Front ignore
+dist/

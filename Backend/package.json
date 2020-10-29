@@ -1,21 +1,13 @@
 {
-  "name": "issuetracker-33",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "This is a repository for J33's Issue Tracker group project.",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/boostcamp-2020/IssueTracker-33.git"
-  },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/boostcamp-2020/IssueTracker-33/issues"
-  },
-  "homepage": "https://github.com/boostcamp-2020/IssueTracker-33#readme",
   "dependencies": {
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
