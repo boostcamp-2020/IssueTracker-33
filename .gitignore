@@ -1,5 +1,6 @@
 # Back ignore
 node_modules/
+.env
 
 # Front ignore
 dist/
