@@ -8,5 +8,9 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "ignorePatterns": ["node_modules/"]
+    "ignorePatterns": ["node_modules/"],
+    "rules": {        
+        "consistent-return": "warn",
+        "no-unused-vars": "warn"
+    }
 }
