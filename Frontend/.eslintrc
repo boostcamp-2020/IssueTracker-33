@@ -1,5 +1,5 @@
 {
-    "extends": ["airbnb", "react", "prettier"],
+    "extends": ["airbnb", "prettier"],
     "env": {
         "node": true,
         "es6": true,
@@ -9,5 +9,14 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "ignorePatterns": ["node_modules/"]
+    "ignorePatterns": ["node_modules/"],
+    "rules": {
+        "consistent-return": "warn",
+        "no-unused-vars": "warn",
+        "import/no-unresolved": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "jsx-a11y/no-static-element-interactions": "warn",
+        "react/jsx-filename-extension": ["off", { "extensions": [".js", ".jsx"] }],
+        "react/prop-types": "off"
+    }
 }
