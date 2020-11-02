@@ -1,12 +1,34 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const NewIssueForm = () => {
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
 
+  // api 모듈로 분리
+  const postIssue = async () => {
+    try {
+      return axios.post('http://localhost:3000/api/v1/issues', {
+        title,
+        comment,
+        userId: 1,
+        milestoneId: 1,
+        labels: [1],
+        assignees: [1],
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const createIssue = async () => {
+    const result = await postIssue();
+    console.log(result);
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
-    // TODO: 서버에 이슈 POST
+    createIssue();
   };
 
   const onChangeTitle = (e) => {
