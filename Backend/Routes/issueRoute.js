@@ -12,35 +12,36 @@ router.post('/', async (req, res) => {
 
     // issue 추가 - 추가된 id 받기
     const issueValues = [userId, title, milestoneId, 1];
-    // const issueValues = [1, 'title', 1, 1];
     const insertResult = await conn.query(
       'INSERT INTO issues(userId, title, milestoneId, isOpen) VALUES(?, ?, ?, ?)',
       issueValues,
     );
     const { insertId } = insertResult[0];
-    console.log(insertId);
     // comment 추가
     const commentValues = [1, insertId, comment];
-    const commentResult = await conn.query(
+    await conn.query(
       'INSERT INTO comments(userId, issueId, description) VALUES(?, ?, ?)',
       commentValues,
     );
     // 있을 때만 작업해줄 데이터!
     // labels (관계테이블), 반복문
     if (labels !== undefined) {
-      labels.forEach(async (label) => {
+      await labels.reduce(async (lastPromise, label) => {
+        await lastPromise;
         const labelQuery = `INSERT INTO labelIssue(labelId, issueId) VALUES(${label}, ${insertId})`;
         await conn.query(labelQuery);
-      });
+      }, Promise.resolve());
     }
     // Assignees (관계테이블), 반복문
     if (assignees !== undefined) {
-      assignees.forEach(async (assignee) => {
+      await assignees.reduce(async (lastPromise, assignee) => {
+        await lastPromise;
         const assigneeQuery = `INSERT INTO assignees(userId, issueId) VALUES(${assignee}, ${insertId})`;
         await conn.query(assigneeQuery);
-      });
+      }, Promise.resolve());
     }
     await conn.commit();
+    // TODO: 성공, 실패 json 반환 관련 처리 필요
     res.json({ message: 'success!' });
   } catch {
     console.log('error');
