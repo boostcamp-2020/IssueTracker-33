@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const ErrorMessage = ({ message }) => {
@@ -12,8 +12,13 @@ const ErrorMessage = ({ message }) => {
 const NewIssueForm = () => {
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
+  const [submitDisabled, setSubmitDisabled] = useState(true);
   const [titleError, setTitleError] = useState(false);
   const [commentError, setCommentError] = useState(false);
+
+  useEffect(() => {
+    setSubmitDisabled(!(title && comment));
+  }, [title, comment]);
 
   // api 모듈로 분리
   const postIssue = async () => {
@@ -79,7 +84,7 @@ const NewIssueForm = () => {
       />
       {commentError && <ErrorMessage message="본문을 입력해주세요." />}
       <button type="button">Cancel</button>
-      <button type="submit" onClick={onSubmit}>
+      <button type="submit" onClick={onSubmit} disabled={submitDisabled}>
         Submit new issue
       </button>
     </div>
