@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { isStyledComponent } from 'styled-components';
+import React, { useState } from 'react';
 import NewIssueList from './NewIssueList';
 
 const NewIssueDropdown = ({ dropdownTitle, children }) => {

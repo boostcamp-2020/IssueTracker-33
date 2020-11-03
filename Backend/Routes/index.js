@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const labelRouter = require('./labelRoute');
 const milestoneRouter = require('./milestoneRoute');
 const userRouter = require('./userRoute');
