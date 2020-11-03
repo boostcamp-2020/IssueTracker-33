@@ -1,6 +1,6 @@
 import React from 'react';
 import NewIssueForm from '../Components/NewIssueForm';
-import NewIssueOption from './Components/NewIssueOption';
+import NewIssueOption from '../Components/NewIssueOption';
 
 const NewIssuePage = () => {
   return (
