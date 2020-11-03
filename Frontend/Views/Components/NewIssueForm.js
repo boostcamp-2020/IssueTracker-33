@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import ErrorMessage from './ErrorMessage';
 
 const NewIssueForm = () => {
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
+  const [titleError, setTitleError] = useState(false);
+  const [commentError, setCommentError] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
 
-  // api 모듈로 분리
+  useEffect(() => {
+    setSubmitDisabled(!(title && comment));
+  }, [title, comment]);
+
+  // TODO api 분리
   const postIssue = async () => {
     try {
-      return axios.post('http://localhost:3000/api/v1/issues', {
+      return await axios.post('http://localhost:3000/api/v1/issues', {
         title,
         comment,
         userId: 1,
@@ -17,16 +25,30 @@ const NewIssueForm = () => {
         assignees: [1],
       });
     } catch (e) {
+      // TODO 에러 처리 부분
       console.error(e);
     }
   };
 
   const createIssue = async () => {
     const result = await postIssue();
-    console.log(result);
   };
 
-  const onSubmit = (e) => {
+  const onSubmitIssue = (e) => {
+    let isTitle = false;
+    let isComment = false;
+
+    if (title.trim() === '') {
+      setTitleError(true);
+      isTitle = true;
+    }
+    if (comment.trim() === '') {
+      setCommentError(true);
+      isComment = true;
+    }
+    if (isTitle || isComment) {
+      return;
+    }
     e.preventDefault();
     createIssue();
   };
@@ -40,8 +62,9 @@ const NewIssueForm = () => {
   };
 
   return (
-    <div>
+    <>
       <input type="text" placeholder="Title" onChange={onChangeTitle} />
+      {titleError && <ErrorMessage message="제목을 입력해주세요." />}
       <input
         type="text"
         placeholder="Leave a comment"
@@ -50,13 +73,14 @@ const NewIssueForm = () => {
       <input
         placeholder="Attach files by selecting here"
         type="file"
-        accept="image/png, image/jpeg"
+        accept="image/png, image/jpeg, image/jpg"
       />
+      {commentError && <ErrorMessage message="본문을 입력해주세요." />}
       <button type="button">Cancel</button>
-      <button type="submit" onClick={onSubmit}>
+      <button type="submit" onClick={onSubmitIssue} disabled={submitDisabled}>
         Submit new issue
       </button>
-    </div>
+    </>
   );
 };
 
