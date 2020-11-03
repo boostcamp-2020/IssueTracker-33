@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const LabelRouter = require('./labels');
-const MilestoneRouter = require('./milestones');
-const UserRouter = require('./users');
+const labelRouter = require('./labelRoute');
+const milestoneRouter = require('./milestoneRoute');
+const userRouter = require('./userRoute');
+const issueRoute = require('./issueRoute');
 
-router.use('/labels', LabelRouter);
-router.use('/milestones', MilestoneRouter);
-router.use('/users', UserRouter);
+router.use('/labels', labelRouter);
+router.use('/milestones', milestoneRouter);
+router.use('/users', userRouter);
+router.use('/issues', issueRoute);
 
 module.exports = router;
