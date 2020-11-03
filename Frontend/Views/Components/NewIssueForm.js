@@ -14,11 +14,6 @@ const NewIssueForm = () => {
   const [comment, setComment] = useState('');
   const [titleError, setTitleError] = useState(false);
   const [commentError, setCommentError] = useState(false);
-  const [errorExisting, setErrorExisting] = useState(false);
-
-  useEffect(() => {
-    setErrorExisting(titleError || commentError);
-  }, [titleError, commentError]);
 
   // api 모듈로 분리
   const postIssue = async () => {
@@ -42,14 +37,18 @@ const NewIssueForm = () => {
   };
 
   const onSubmit = (e) => {
+    let isTitle = false;
+    let isComment = false;
     // title, comment 을 받아서 trim 후 스페이스 뿐이라면 에러 메시지 출력
     if (title.trim() === '') {
       setTitleError(true);
+      isTitle = true;
     }
     if (comment.trim() === '') {
       setCommentError(true);
+      isComment = true;
     }
-    if (setErrorExisting) {
+    if (isTitle || isComment) {
       return;
     }
     e.preventDefault();
