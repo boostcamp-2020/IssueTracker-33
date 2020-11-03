@@ -1,33 +1,30 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { isStyledComponent } from 'styled-components';
 
+const NewIssueDropdown = ({ dropdownTitle, children }) => {
+  const [test, setTest] = useState('not yet');
+  const [isOpen, setIsOpen] = useState(false);
 
-const NewIssueDropdown = (props) => {
-  const [test, setTest] = useState("not yet")
-  
+  const layer = {
+    backgroundColor: 'aqua',
+  };
 
-  let layer = {
-      backgroundColor : 'aqua',
-      display : 'none'
-  }
+  const names = [...children];
+  const listItem = names.map((name) => <div key={name.id}>{name.id}</div>);
 
-  const change = (e) => {
-      setTest(e.target.value)
-  }
+  const clickHandler = () => {
+    isOpen ? setIsOpen(false) : setIsOpen(true);
+  };
 
   return (
-    <Fragment>
-      <div>
-        <span>{props.dropdownTitle}</span>
-        <ul> [+]
-            <div style={layer}> 
-                <li> asdasd </li>
-                <li> asdasd </li>
-                <li> asdasd </li>
-            </div>
-        </ul>
+    <>
+      <span>{dropdownTitle}</span>
+      <div onClick={clickHandler} className="m">
+        [+]
       </div>
-      <div id={props.dropdownTitle + 'selected'}> {test} </div>
-    </Fragment>
+      {isOpen && <div style={layer}>{listItem}</div>}
+      <div id={`${dropdownTitle} selected`}>{test}</div>
+    </>
   );
 };
 

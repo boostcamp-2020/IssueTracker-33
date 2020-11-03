@@ -1,6 +1,6 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
 const mysql = require('mysql2/promise');
+const router = express.Router();
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -9,13 +9,11 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
-    
+router.get('/', async (req, res, next) => {
+  const sql = `SELECT * FROM labels`;
 
-router.get('/', async (req,res,next) => {
-  const sql = `SELECT * FROM labels`
-    
-  const results = await pool.execute(sql)
-  res.json(results[0])
-})
+  const results = await pool.execute(sql);
+  res.json(results[0]);
+});
 
 module.exports = router;
