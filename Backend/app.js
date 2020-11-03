@@ -1,7 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
-const router = require('./Routes/index');
 const cors = require('cors');
+const router = require('./Routes/index');
 
 const app = express();
 app.use(logger('short'));
