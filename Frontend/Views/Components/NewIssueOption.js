@@ -22,8 +22,8 @@ const NewIssueOption = () => {
       setUser(userResolve.data);
       setLabel(labelResolve.data);
       setMile(mileResolve.data);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     }
   }, []);
 
