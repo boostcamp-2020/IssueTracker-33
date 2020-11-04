@@ -1,21 +1,21 @@
 import React from 'react';
 
-const NewIssueList = ({ selected, setSelected, children }) => {
-  const clickHandler = (e, child) => {
+const NewIssueList = ({ selected, setSelected, data }) => {
+  const onUpdateSelection = (e, row) => {
     if (e.target.classList.contains('selected')) {
       e.target.classList.remove('selected');
-      setSelected(selected.filter((elem) => elem !== child));
+      setSelected(selected.filter((elem) => elem !== row));
     } else {
-      setSelected([...selected, child]);
+      setSelected([...selected, row]);
       e.target.classList.add('selected');
     }
   };
 
   return (
     <div>
-      {children.map((child) => (
-        <div key={child.id} onClick={(e) => clickHandler(e, child)}>
-          {child.username || child.name || child.title}
+      {data.map((row) => (
+        <div key={row.id} onClick={(e) => onUpdateSelection(e, row)}>
+          {row.username || row.name || row.title}
         </div>
       ))}
     </div>

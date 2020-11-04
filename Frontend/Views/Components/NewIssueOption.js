@@ -3,30 +3,35 @@ import axios from 'axios';
 import NewIssueDropdown from './NewIssueDropdown';
 
 const NewIssueOption = () => {
-  const [data, setData] = useState(['', '', '']);
+  const [userData, setUser] = useState('');
+  const [labelData, setLabel] = useState('');
+  const [mileData, setMile] = useState('');
 
   useEffect(async () => {
-    const URL1 = 'http://localhost:3000/api/v1/labels';
-    const URL2 = 'http://localhost:3000/api/v1/milestones';
-    const URL3 = 'http://localhost:3000/api/v1/users';
+    const USER_URL = 'http://localhost:3000/api/v1/users';
+    const LABEL_URL = 'http://localhost:3000/api/v1/labels';
+    const MILE_URL = 'http://localhost:3000/api/v1/milestones';
 
-    const promise1 = axios.get(URL1);
-    const promise2 = axios.get(URL2);
-    const promise3 = axios.get(URL3);
+    const userProm = axios.get(USER_URL);
+    const labelProm = axios.get(LABEL_URL);
+    const mileProm = axios.get(MILE_URL);
 
     try {
-      const results = await Promise.all([promise1, promise2, promise3]);
-      setData([results[0].data, results[1].data, results[2].data]);
-    } catch (e) {
-      console.error(e);
+      const [userResolve, labelResolve, mileResolve] = await Promise.all([userProm, labelProm, mileProm]);
+
+      setUser(userResolve.data);
+      setLabel(labelResolve.data);
+      setMile(mileResolve.data);
+    } catch (err) {
+      console.error(err);
     }
   }, []);
 
   return (
     <div>
-      <NewIssueDropdown dropdownTitle="Assignees">{data[2]}</NewIssueDropdown>
-      <NewIssueDropdown dropdownTitle="Labels">{data[0]}</NewIssueDropdown>
-      <NewIssueDropdown dropdownTitle="Milestones">{data[1]}</NewIssueDropdown>
+      <NewIssueDropdown dropdownTitle="Assignees">{userData}</NewIssueDropdown>
+      <NewIssueDropdown dropdownTitle="Labels">{labelData}</NewIssueDropdown>
+      <NewIssueDropdown dropdownTitle="Milestones">{mileData}</NewIssueDropdown>
     </div>
   );
 };
