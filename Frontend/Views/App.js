@@ -7,7 +7,7 @@ import IssueMainPage from './Pages/IssueMainPage';
 const App = () => {
   return (
     <Router>
-      <Route exact path="/issue" component={IssueMainPage} />
+      <Route exact path="/issues" component={IssueMainPage} />
       <Route path="/issues/new" component={NewIssuePage} />
     </Router>
   );
