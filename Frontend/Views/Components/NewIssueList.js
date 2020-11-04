@@ -1,7 +1,7 @@
 import React from 'react';
 
 const NewIssueList = ({ selected, setSelected, data }) => {
-  const clickHandler = (e, row) => {
+  const onUpdateSelection = (e, row) => {
     if (e.target.classList.contains('selected')) {
       e.target.classList.remove('selected');
       setSelected(selected.filter((elem) => elem !== row));
@@ -14,7 +14,7 @@ const NewIssueList = ({ selected, setSelected, data }) => {
   return (
     <div>
       {data.map((row) => (
-        <div key={row.id} onClick={(e) => clickHandler(e, row)}>
+        <div key={row.id} onClick={(e) => onUpdateSelection(e, row)}>
           {row.username || row.name || row.title}
         </div>
       ))}
