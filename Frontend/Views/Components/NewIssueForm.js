@@ -7,6 +7,7 @@ const NewIssueForm = () => {
   const [comment, setComment] = useState('');
   const [titleError, setTitleError] = useState(false);
   const [commentError, setCommentError] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(true);
 
   useEffect(() => {
@@ -61,21 +62,44 @@ const NewIssueForm = () => {
     setComment(e.target.value);
   };
 
+  const onUploadImage = async (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const image = e.target.files[0];
+      const datas = new FormData();
+      datas.append('image', image, image.name);
+      try {
+        const result = await axios({
+          method: 'post',
+          url: 'http://localhost:3000/api/v1/images',
+          data: datas,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setImageError(false);
+        setComment(`${comment}\n![image](${result.data.imageLink})`);
+      } catch (err) {
+        setImageError(true);
+      }
+    }
+  };
+
   return (
     <>
       <input type="text" placeholder="Title" onChange={onChangeTitle} />
       {titleError && <ErrorMessage message="제목을 입력해주세요." />}
-      <input
+      <textarea
         type="text"
         placeholder="Leave a comment"
         onChange={onChangeComment}
+        value={comment}
       />
       <input
         placeholder="Attach files by selecting here"
         type="file"
         accept="image/png, image/jpeg, image/jpg"
+        onChange={onUploadImage}
       />
       {commentError && <ErrorMessage message="본문을 입력해주세요." />}
+      {imageError && <ErrorMessage message="이미지 업로드에 실패했습니다." />}
       <button type="button">Cancel</button>
       <button type="submit" onClick={onSubmitIssue} disabled={submitDisabled}>
         Submit new issue
