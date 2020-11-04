@@ -23,6 +23,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     host: 'localhost',
     open: true,
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
