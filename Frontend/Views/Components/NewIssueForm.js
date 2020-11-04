@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ErrorMessage from './ErrorMessage';
 
-const NewIssueForm = () => {
+const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData }) => {
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
   const [titleError, setTitleError] = useState(false);
@@ -21,13 +21,13 @@ const NewIssueForm = () => {
         title,
         comment,
         userId: 1,
-        milestoneId: 1,
-        labels: [1],
-        assignees: [1],
+        milestoneId: mileSelectedData.map((elem) => elem.id)[0],
+        labels: labelSelectedData.map((elem) => elem.id),
+        assignees: userSelectedData.map((elem) => elem.id),
       });
-    } catch (e) {
+    } catch (err) {
       // TODO 에러 처리 부분
-      console.error(e);
+      console.error(err);
     }
   };
 
@@ -86,12 +86,7 @@ const NewIssueForm = () => {
     <>
       <input type="text" placeholder="Title" onChange={onChangeTitle} />
       {titleError && <ErrorMessage message="제목을 입력해주세요." />}
-      <textarea
-        type="text"
-        placeholder="Leave a comment"
-        onChange={onChangeComment}
-        value={comment}
-      />
+      <textarea type="text" placeholder="Leave a comment" onChange={onChangeComment} value={comment} />
       <input
         placeholder="Attach files by selecting here"
         type="file"
