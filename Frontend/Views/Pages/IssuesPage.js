@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import IssueList from '../Components/IssueList';
 
+const toKeyValueMap = (records) => {
+  const map = {};
+  records.forEach((record) => {
+    map[record.id] = record;
+  });
+  return map;
+};
+
 const IssuesPage = () => {
-  const [issueData, setIssue] = useState([]);
-  const [userData, setUser] = useState([]);
-  const [labelData, setLabel] = useState([]);
-  const [mileData, setMile] = useState([]);
+  const [data, setData] = useState({ issueData: [], userData: [], labelData: [], mileData: [] });
 
   useEffect(async () => {
     // TODO: Append query string for issue filtering
@@ -20,22 +25,24 @@ const IssuesPage = () => {
     const labelProm = axios.get(LABEL_URL);
     const mileProm = axios.get(MILE_URL);
 
-    const [{ data: issues }, { data: users }, { data: labels }, { data: milestones }] = await Promise.all([
+    const [issueResolve, userResolve, labelResolve, milesResolve] = await Promise.all([
       issueProm,
       userProm,
       labelProm,
       mileProm,
     ]);
 
-    setIssue(issues);
-    setUser(users);
-    setLabel(labels);
-    setMile(milestones);
+    setData({
+      issueData: issueResolve.data,
+      userData: toKeyValueMap(userResolve.data),
+      labelData: toKeyValueMap(labelResolve.data),
+      mileData: toKeyValueMap(milesResolve.data),
+    });
   }, []);
 
   return (
     <div>
-      <IssueList issues={issueData} users={userData} labels={labelData} milestones={mileData} />
+      <IssueList issues={data.issueData} users={data.userData} labels={data.labelData} milestones={data.mileData} />
     </div>
   );
 };
