@@ -1,13 +1,11 @@
 import React from 'react';
-import NewIssueForm from '../Components/NewIssueForm';
-import NewIssueOption from '../Components/NewIssueOption';
+import NewIssueWrapper from '../Components/NewIssueWrapper';
 
 const NewIssuePage = () => {
   return (
-    <div>
-      <NewIssueForm />
-      <NewIssueOption />
-    </div>
+    <>
+      <NewIssueWrapper />
+    </>
   );
 };
 export default NewIssuePage;

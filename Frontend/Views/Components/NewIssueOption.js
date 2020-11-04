@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NewIssueDropdown from './NewIssueDropdown';
 
-const NewIssueOption = () => {
+const NewIssueOption = ({
+  userSelectedData,
+  labelSelectedData,
+  mileSelectedData,
+  setUserSelectedData,
+  setLabelSelectedData,
+  setMileSelectedData,
+}) => {
   const [userData, setUser] = useState('');
   const [labelData, setLabel] = useState('');
   const [mileData, setMile] = useState('');
@@ -29,9 +36,15 @@ const NewIssueOption = () => {
 
   return (
     <div>
-      <NewIssueDropdown dropdownTitle="Assignees">{userData}</NewIssueDropdown>
-      <NewIssueDropdown dropdownTitle="Labels">{labelData}</NewIssueDropdown>
-      <NewIssueDropdown dropdownTitle="Milestones">{mileData}</NewIssueDropdown>
+      <NewIssueDropdown dropdownTitle="Assignees" selected={userSelectedData} setSelected={setUserSelectedData}>
+        {userData}
+      </NewIssueDropdown>
+      <NewIssueDropdown dropdownTitle="Labels" selected={labelSelectedData} setSelected={setLabelSelectedData}>
+        {labelData}
+      </NewIssueDropdown>
+      <NewIssueDropdown dropdownTitle="Milestones" selected={mileSelectedData} setSelected={setMileSelectedData}>
+        {mileData}
+      </NewIssueDropdown>
     </div>
   );
 };
