@@ -5,40 +5,46 @@ router.get('/', async (req, res) => {
   try {
     const { open, author, milestone, label, assignee } = req.query;
 
-    const filterColumns = [];
+    const innerFilterCondition = [];
+    const filterValues = [];
     if (open !== undefined) {
-      filterColumns.push(`isOpen = ${open}`);
+      innerFilterCondition.push('isOpen = ?');
+      filterValues.push(open);
     } else {
       // default: show open issues
-      filterColumns.push('isOpen = 1');
+      innerFilterCondition.push('isOpen = ?');
+      filterValues.push('1');
     }
     if (author) {
-      filterColumns.push(`userId = ${author}`);
+      innerFilterCondition.push('userId = ?');
+      filterValues.push(author);
     }
     if (milestone) {
-      filterColumns.push(`milestoneId = ${milestone}`);
+      innerFilterCondition.push('milestoneId = ?');
+      filterValues.push(milestone);
     }
-    const whereClause = filterColumns.length ? `WHERE ${filterColumns.join(' AND ')}` : '';
+    const whereClause = innerFilterCondition.length ? `WHERE ${innerFilterCondition.join(' AND ')}` : '';
     let baseQuery = `SELECT id, A.userId, title, milestoneId, isOpen, createdAt, openCloseAt
-    FROM (SELECT * FROM issues ${whereClause}) AS A`;
+                     FROM (SELECT * FROM issues ${whereClause}) AS A`;
 
     if (label || assignee) {
       let joinClause = ' ';
       let joinWhereClause = ' WHERE ';
       if (label) {
-        joinClause += 'inner join labelIssue on A.id=labelIssue.issueId';
-        joinWhereClause += `labelIssue.labelId=${label}`;
+        joinClause += ' inner join labelIssue on A.id = labelIssue.issueId ';
+        joinWhereClause += ' labelIssue.labelId = ? ';
+        filterValues.push(label);
       }
       if (assignee) {
-        joinClause += ' inner join assignees on A.id=assignees.issueId';
-        label ? (joinWhereClause += ' AND ') : (joinWhereClause += '');
-        joinWhereClause += `assignees.userId=${assignee}`;
+        joinClause += ' inner join assignees on A.id = assignees.issueId ';
+        joinWhereClause += label ? ' AND ' : '';
+        joinWhereClause += ' assignees.userId = ? ';
+        filterValues.push(assignee);
       }
       baseQuery += joinClause + joinWhereClause;
     }
 
-    const [issues] = await db.execute(baseQuery);
-
+    const [issues] = await db.execute(baseQuery, filterValues);
     const results = issues.map(async (issue) => {
       let [labels] = await db.execute('SELECT labelId FROM labelIssue WHERE issueId = ? ORDER BY labelId ASC', [
         issue.id,
