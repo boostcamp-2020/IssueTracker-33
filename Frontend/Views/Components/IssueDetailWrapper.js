@@ -4,7 +4,7 @@ import IssueDetailTitle from './IssueDetailTitle';
 import NewIssueOption from './NewIssueOption';
 import CommentList from './CommentList';
 
-const IssueDetailWrapper = () => {
+const IssueDetailWrapper = ({ issueId }) => {
   const [userSelectedData, setUserSelectedData] = useState([]);
   const [labelSelectedData, setLabelSelectedData] = useState([]);
   const [mileSelectedData, setMileSelectedData] = useState([]);
@@ -13,7 +13,7 @@ const IssueDetailWrapper = () => {
 
   const getIssue = async () => {
     try {
-      return await axios.get('http://localhost:3000/api/v1/issues/22');
+      return await axios.get(`http://localhost:3000/api/v1/issues/${issueId}`);
     } catch (err) {
       console.err(err);
     }
@@ -21,7 +21,7 @@ const IssueDetailWrapper = () => {
 
   const getComments = async () => {
     try {
-      return await axios.get('http://localhost:3000/api/v1/issues/22/comments');
+      return await axios.get(`http://localhost:3000/api/v1/issues/${issueId}/comments`);
     } catch (err) {
       console.err(err);
     }
