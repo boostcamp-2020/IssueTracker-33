@@ -3,6 +3,7 @@ import axios from 'axios';
 import IssueDetailTitle from './IssueDetailTitle';
 import NewIssueOption from './NewIssueOption';
 import CommentList from './CommentList';
+import CommentForm from './CommentForm';
 
 const IssueDetailWrapper = ({ issueId }) => {
   const [userSelectedData, setUserSelectedData] = useState([]);
@@ -52,7 +53,7 @@ const IssueDetailWrapper = ({ issueId }) => {
   return (
     <>
       <IssueDetailTitle issueData={issueData} />
-      <CommentList commentsData={commentsData} />
+      <CommentList commentsData={commentsData} owner={issueData.userId} />
       <NewIssueOption
         userSelectedData={userSelectedData}
         labelSelectedData={labelSelectedData}
@@ -61,6 +62,7 @@ const IssueDetailWrapper = ({ issueId }) => {
         setLabelSelectedData={setLabelSelectedData}
         setMileSelectedData={setMileSelectedData}
       />
+      <CommentForm issueId={issueId} commentsData={commentsData} setCommentsData={setCommentsData} />
     </>
   );
 };
