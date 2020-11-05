@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-// TODO: 헤더(전체 체크박스 + ALMA) 컴포넌트 정의
-// TODO: 별개의 컴포넌트로 분리할 지 고민
-
 const MarkAs = () => {
   return (
     <>
@@ -11,13 +8,109 @@ const MarkAs = () => {
   );
 };
 
-const Alma = () => {
+const UserItem = ({ value }) => {
   return (
     <>
-      <button type="button">Author</button>
-      <button type="button">Labels</button>
-      <button type="button">Milestone</button>
-      <button type="button">Assignees</button>
+      <img src={value.imageLink} alt={value.username} />
+      <span>{value.username}</span>
+    </>
+  );
+};
+
+const LabelItem = ({ value }) => {
+  return (
+    <>
+      <span>{value.color}</span>
+      <span>{value.name}</span>
+      <span>{value.desc}</span>
+    </>
+  );
+};
+
+const MilestoneItem = ({ value }) => {
+  return (
+    <>
+      <span>{value.title}</span>
+    </>
+  );
+};
+
+const Dropdown = ({ name, values }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const onToggleDropdown = () => {
+    setIsVisible(!isVisible);
+  };
+
+  let ItemComponent;
+  switch (name) {
+    case 'author':
+      ItemComponent = UserItem;
+      break;
+    case 'label':
+      ItemComponent = LabelItem;
+      break;
+    case 'milestone':
+      ItemComponent = MilestoneItem;
+      break;
+    case 'assignee':
+      ItemComponent = UserItem;
+      break;
+    default:
+      ItemComponent = null;
+  }
+
+  const onSelectAlmaItem = (id) => {
+    const oldQueryString = window.location.search;
+
+    let oldQuery = {};
+    if (oldQueryString !== '') {
+      const querys = oldQueryString.replace('?', '').split('&');
+      oldQuery = querys.reduce((acc, query) => {
+        const [key, value] = query.split('=');
+        return { ...acc, [key]: value };
+      }, {});
+    }
+    const newQuery = {
+      ...oldQuery,
+      [name]: id,
+    };
+
+    const newQueryString = Object.keys(newQuery).reduce((acc, key) => {
+      return `${acc}${acc === '' ? '' : '&'}${key}=${newQuery[key]}`;
+    }, '');
+    window.location.search = `?${newQueryString}`;
+  };
+
+  return (
+    <>
+      <button type="button" onClick={onToggleDropdown}>
+        {name}
+      </button>
+      {isVisible && (
+        <>
+          <div>{`Filter by ${name}`}</div>
+          {Object.keys(values).map((key) => {
+            return (
+              <div key={key} onClick={() => onSelectAlmaItem(key)}>
+                <span>@</span>
+                <ItemComponent value={values[key]} />
+              </div>
+            );
+          })}
+        </>
+      )}
+    </>
+  );
+};
+
+const Alma = ({ users, labels, milestones }) => {
+  return (
+    <>
+      <Dropdown name="author" values={users} />
+      <Dropdown name="label" values={labels} />
+      <Dropdown name="milestone" values={milestones} />
+      <Dropdown name="assignee" values={users} />
     </>
   );
 };
@@ -123,7 +216,7 @@ const IssueList = ({ issues, users, labels, milestones }) => {
     <div>
       <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
       {isMarkAs && <MarkAs />}
-      {!isMarkAs && <Alma />}
+      {!isMarkAs && <Alma users={users} labels={labels} milestones={milestones} />}
       {issues.map((issue) => (
         <IssueListItem
           key={issue.id}
