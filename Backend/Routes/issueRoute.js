@@ -66,4 +66,32 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/:issueId', async (req, res) => {
+  try {
+    const [[issue]] = await db.execute('SELECT * FROM issues WHERE id = ?', [req.params.issueId]);
+    const [labelsResult] = await db.execute('SELECT labelId FROM labelIssue WHERE issueId = ? ORDER BY labelId ASC', [
+      issue.id,
+    ]);
+    const labels = labelsResult.map(({ labelId }) => labelId);
+    const [assigneesResult] = await db.execute('SELECT userId FROM assignees WHERE issueId = ? ORDER BY userId ASC', [
+      issue.id,
+    ]);
+    const assignees = assigneesResult.map(({ userId }) => userId);
+    res.status(200).json({ issue, labels, assignees });
+  } catch (err) {
+    res.status(400).end();
+  }
+});
+
+router.get('/:issueId/comments', async (req, res) => {
+  try {
+    const [comments] = await db.execute('SELECT * FROM comments WHERE issueId = ? ORDER BY createdAt ASC', [
+      req.params.issueId,
+    ]);
+    res.status(200).json({ comments });
+  } catch (err) {
+    res.status(400).end();
+  }
+});
+
 module.exports = router;
