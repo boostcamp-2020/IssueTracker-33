@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Comment = ({ description }) => {
+const Comment = ({ description, isOwner }) => {
   return <>{description}</>;
 };
 
