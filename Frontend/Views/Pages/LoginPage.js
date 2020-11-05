@@ -2,9 +2,9 @@ import React from 'react';
 
 const LoginPage = () => {
   const githubOauth = () => {
-    console.log('가자 깃헙으로');
-    location.href = 'http://localhost:3000/auth/github';
+    window.location.href = 'http://localhost:3000/auth/github';
   };
+
   return (
     <div>
       <div>

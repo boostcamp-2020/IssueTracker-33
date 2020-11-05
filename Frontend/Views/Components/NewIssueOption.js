@@ -19,19 +19,20 @@ const NewIssueOption = ({
     const LABEL_URL = 'http://localhost:3000/api/v1/labels';
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
 
-    const userProm = axios.get(USER_URL);
-    const labelProm = axios.get(LABEL_URL);
-    const mileProm = axios.get(MILE_URL);
+    const userProm = axios.get(USER_URL, { withCredentials: true });
+    const labelProm = axios.get(LABEL_URL, { withCredentials: true });
+    const mileProm = axios.get(MILE_URL, { withCredentials: true });
 
-    try {
-      const [userResolve, labelResolve, mileResolve] = await Promise.all([userProm, labelProm, mileProm]);
-
-      setUser(userResolve.data);
-      setLabel(labelResolve.data);
-      setMile(mileResolve.data);
-    } catch (err) {
-      console.error(err);
-    }
+    await Promise.all([userProm, labelProm, mileProm])
+      .then((resolve) => {
+        const [userResolve, labelResolve, mileResolve] = resolve;
+        setUser(userResolve.data);
+        setLabel(labelResolve.data);
+        setMile(mileResolve.data);
+      })
+      .catch(() => {
+        window.location.href = 'http://localhost:8000';
+      });
   }, []);
 
   return (
