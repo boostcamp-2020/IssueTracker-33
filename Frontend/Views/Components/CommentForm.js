@@ -28,7 +28,8 @@ const CommentForm = ({ issueId, commentsData, setCommentsData }) => {
 
   const createComment = async () => {
     const result = await postComment();
-    setCommentsData([...commentsData, result.data.comment]);
+    const [newComment] = result.data.comment;
+    setCommentsData([...commentsData, newComment]);
   };
 
   const onSubmitComment = (e) => {
