@@ -1,7 +1,27 @@
 const router = require('express').Router();
 const { db } = require('../Models/dbPool');
 
-router.get('/', (req, res) => {});
+router.get('/', async (req, res) => {
+  // TODO: 필터링
+  try {
+    const [issues] = await db.execute('SELECT * FROM issues WHERE isOpen = 1');
+    const results = issues.map(async (issue) => {
+      let [labels] = await db.execute('SELECT labelId FROM labelIssue WHERE issueId = ? ORDER BY labelId ASC', [
+        issue.id,
+      ]);
+      labels = labels.map(({ labelId }) => labelId);
+      let [assignees] = await db.execute('SELECT userId FROM assignees WHERE issueId = ? ORDER BY userId ASC', [
+        issue.id,
+      ]);
+      assignees = assignees.map(({ userId }) => userId);
+      return { ...issue, labels, assignees };
+    });
+    const resolved = await Promise.all(results);
+    res.json(resolved);
+  } catch (err) {
+    res.status(400).end();
+  }
+});
 
 router.post('/', async (req, res) => {
   const { title, userId, milestoneId, labels, assignees, comment } = req.body;
@@ -19,10 +39,7 @@ router.post('/', async (req, res) => {
     const { insertId } = insertResult[0];
     // comment 추가
     const commentValues = [1, insertId, comment];
-    await conn.query(
-      'INSERT INTO comments(userId, issueId, description) VALUES(?, ?, ?)',
-      commentValues,
-    );
+    await conn.query('INSERT INTO comments(userId, issueId, description) VALUES(?, ?, ?)', commentValues);
     // 있을 때만 작업해줄 데이터!
     // labels (관계테이블), 반복문
     if (labels !== undefined) {
