@@ -2,9 +2,43 @@ const router = require('express').Router();
 const { db } = require('../Models/dbPool');
 
 router.get('/', async (req, res) => {
-  // TODO: 필터링
   try {
-    const [issues] = await db.execute('SELECT * FROM issues WHERE isOpen = 1');
+    const { open, author, milestone, label, assignee } = req.query;
+
+    const filterColumns = [];
+    if (open !== undefined) {
+      filterColumns.push(`isOpen = ${open}`);
+    } else {
+      // default: show open issues
+      filterColumns.push('isOpen = 1');
+    }
+    if (author) {
+      filterColumns.push(`userId = ${author}`);
+    }
+    if (milestone) {
+      filterColumns.push(`milestoneId = ${milestone}`);
+    }
+    const whereClause = filterColumns.length ? `WHERE ${filterColumns.join(' AND ')}` : '';
+    let baseQuery = `SELECT id, A.userId, title, milestoneId, isOpen, createdAt, openCloseAt
+    FROM (SELECT * FROM issues ${whereClause}) AS A`;
+
+    if (label || assignee) {
+      let joinClause = ' ';
+      let joinWhereClause = ' WHERE ';
+      if (label) {
+        joinClause += 'inner join labelIssue on A.id=labelIssue.issueId';
+        joinWhereClause += `labelIssue.labelId=${label}`;
+      }
+      if (assignee) {
+        joinClause += ' inner join assignees on A.id=assignees.issueId';
+        label ? (joinWhereClause += ' AND ') : (joinWhereClause += '');
+        joinWhereClause += `assignees.userId=${assignee}`;
+      }
+      baseQuery += joinClause + joinWhereClause;
+    }
+
+    const [issues] = await db.execute(baseQuery);
+
     const results = issues.map(async (issue) => {
       let [labels] = await db.execute('SELECT labelId FROM labelIssue WHERE issueId = ? ORDER BY labelId ASC', [
         issue.id,
