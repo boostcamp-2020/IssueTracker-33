@@ -15,11 +15,15 @@ const CommentForm = ({ issueId, commentsData, setCommentsData }) => {
   // TODO api 분리
   const postComment = async () => {
     try {
-      return await axios.post('http://localhost:3000/api/v1/comments', {
-        description: comment,
-        userId: 1,
-        issueId,
-      });
+      return await axios.post(
+        'http://localhost:3000/api/v1/comments',
+        {
+          description: comment,
+          userId: 1,
+          issueId,
+        },
+        { withCredentials: true },
+      );
     } catch (err) {
       // TODO 에러 처리 부분
       console.error(err);

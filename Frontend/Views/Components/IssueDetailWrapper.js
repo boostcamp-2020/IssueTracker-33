@@ -14,7 +14,7 @@ const IssueDetailWrapper = ({ issueId }) => {
 
   const getIssue = async () => {
     try {
-      return await axios.get(`http://localhost:3000/api/v1/issues/${issueId}`);
+      return await axios.get(`http://localhost:3000/api/v1/issues/${issueId}`, { withCredentials: true });
     } catch (err) {
       console.err(err);
     }
@@ -22,7 +22,7 @@ const IssueDetailWrapper = ({ issueId }) => {
 
   const getComments = async () => {
     try {
-      return await axios.get(`http://localhost:3000/api/v1/issues/${issueId}/comments`);
+      return await axios.get(`http://localhost:3000/api/v1/issues/${issueId}/comments`, { withCredentials: true });
     } catch (err) {
       console.err(err);
     }
