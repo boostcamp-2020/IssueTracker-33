@@ -14,13 +14,13 @@ const IssuesPage = () => {
   const [data, setData] = useState({ issueData: [], userData: [], labelData: [], mileData: [] });
 
   useEffect(async () => {
-    // TODO: Append query string for issue filtering
     const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
     const USER_URL = 'http://localhost:3000/api/v1/users';
     const LABEL_URL = 'http://localhost:3000/api/v1/labels';
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
 
-    const issueProm = axios.get(ISSUE_URL);
+    const queryForFiltering = window.location.search;
+    const issueProm = axios.get(`${ISSUE_URL}${queryForFiltering}`);
     const userProm = axios.get(USER_URL);
     const labelProm = axios.get(LABEL_URL);
     const mileProm = axios.get(MILE_URL);
