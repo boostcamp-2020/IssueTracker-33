@@ -6,7 +6,8 @@ exports.tokenCheck = (req, res, next) => {
     jwt.verify(cookie, process.env.TOKEN_SECRET_KEY);
     next();
   } catch (err) {
-    res.status(401).json();
+    // res.status(401).json();
+    res.redirect('http://localhost:8000');
   }
 };
 

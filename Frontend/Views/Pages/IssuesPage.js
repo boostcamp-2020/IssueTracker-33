@@ -25,19 +25,23 @@ const IssuesPage = () => {
     const labelProm = axios.get(LABEL_URL, { withCredentials: true });
     const mileProm = axios.get(MILE_URL, { withCredentials: true });
 
-    await Promise.all([issueProm, userProm, labelProm, mileProm])
-      .then((resolve) => {
-        const [issueResolve, userResolve, labelResolve, milesResolve] = resolve;
-        setData({
-          issueData: issueResolve.data,
-          userData: toKeyValueMap(userResolve.data),
-          labelData: toKeyValueMap(labelResolve.data),
-          mileData: toKeyValueMap(milesResolve.data),
-        });
-      })
-      .catch(() => {
-        window.location.href = 'http://localhost:8000';
+    try {
+      const [issueResolve, userResolve, labelResolve, milesResolve] = await Promise.all([
+        issueProm,
+        userProm,
+        labelProm,
+        mileProm,
+      ]);
+
+      setData({
+        issueData: issueResolve.data,
+        userData: toKeyValueMap(userResolve.data),
+        labelData: toKeyValueMap(labelResolve.data),
+        mileData: toKeyValueMap(milesResolve.data),
       });
+    } catch (err) {
+      window.location.href = 'http://localhost:8000';
+    }
   }, []);
 
   return (

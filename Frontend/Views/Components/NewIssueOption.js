@@ -23,16 +23,14 @@ const NewIssueOption = ({
     const labelProm = axios.get(LABEL_URL, { withCredentials: true });
     const mileProm = axios.get(MILE_URL, { withCredentials: true });
 
-    await Promise.all([userProm, labelProm, mileProm])
-      .then((resolve) => {
-        const [userResolve, labelResolve, mileResolve] = resolve;
-        setUser(userResolve.data);
-        setLabel(labelResolve.data);
-        setMile(mileResolve.data);
-      })
-      .catch(() => {
-        window.location.href = 'http://localhost:8000';
-      });
+    try {
+      const [userResolve, labelResolve, mileResolve] = await Promise.all([userProm, labelProm, mileProm]);
+      setUser(userResolve.data);
+      setLabel(labelResolve.data);
+      setMile(mileResolve.data);
+    } catch (err) {
+      window.location.href = 'http://localhost:8000';
+    }
   }, []);
 
   return (

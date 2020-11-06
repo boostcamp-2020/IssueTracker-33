@@ -24,14 +24,12 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
       labels: labelSelectedData.map((elem) => elem.id),
       assignees: userSelectedData.map((elem) => elem.id),
     };
-    await axios
-      .post(ISSUE_URL, postData, { withCredentials: true })
-      .then(() => {
-        window.location.href = 'http://localhost:8000/issues';
-      })
-      .catch(() => {
-        window.location.href = 'http://localhost:8000';
-      });
+    try {
+      await axios.post(ISSUE_URL, postData, { withCredentials: true });
+      window.location.href = 'http://localhost:8000/issues';
+    } catch (err) {
+      window.location.href = 'http://localhost:8000';
+    }
   };
 
   const onSubmitIssue = (e) => {
