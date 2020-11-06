@@ -14,7 +14,6 @@ const IssuesPage = () => {
   const [data, setData] = useState({ issueData: [], userData: [], labelData: [], mileData: [] });
 
   useEffect(async () => {
-    // TODO: Append query string for issue filtering
     const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
     const USER_URL = 'http://localhost:3000/api/v1/users';
     const LABEL_URL = 'http://localhost:3000/api/v1/labels';
@@ -42,6 +41,7 @@ const IssuesPage = () => {
     } catch (err) {
       window.location.href = 'http://localhost:8000';
     }
+
   }, []);
 
   return (
