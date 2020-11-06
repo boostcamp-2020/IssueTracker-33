@@ -19,7 +19,8 @@ const IssuesPage = () => {
     const LABEL_URL = 'http://localhost:3000/api/v1/labels';
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
 
-    const issueProm = axios.get(ISSUE_URL, { withCredentials: true });
+    const queryString = window.location.search;
+    const issueProm = axios.get(`${ISSUE_URL}${queryString}`, { withCredentials: true });
     const userProm = axios.get(USER_URL, { withCredentials: true });
     const labelProm = axios.get(LABEL_URL, { withCredentials: true });
     const mileProm = axios.get(MILE_URL, { withCredentials: true });
@@ -41,7 +42,6 @@ const IssuesPage = () => {
     } catch (err) {
       window.location.href = 'http://localhost:8000';
     }
-
   }, []);
 
   return (
