@@ -14,25 +14,22 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
     setSubmitDisabled(!(title && comment));
   }, [title, comment]);
 
-  // TODO api 분리
-  const postIssue = async () => {
+  const pushIssue = async () => {
+    const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
+    const postData = {
+      title,
+      comment,
+      userId: 1,
+      milestoneId: mileSelectedData.map((elem) => elem.id)[0],
+      labels: labelSelectedData.map((elem) => elem.id),
+      assignees: userSelectedData.map((elem) => elem.id),
+    };
     try {
-      return await axios.post('http://localhost:3000/api/v1/issues', {
-        title,
-        comment,
-        userId: 1,
-        milestoneId: mileSelectedData.map((elem) => elem.id)[0],
-        labels: labelSelectedData.map((elem) => elem.id),
-        assignees: userSelectedData.map((elem) => elem.id),
-      });
+      await axios.post(ISSUE_URL, postData, { withCredentials: true });
+      window.location.href = 'http://localhost:8000/issues';
     } catch (err) {
-      // TODO 에러 처리 부분
-      console.error(err);
+      window.location.href = 'http://localhost:8000';
     }
-  };
-
-  const createIssue = async () => {
-    const result = await postIssue();
   };
 
   const onSubmitIssue = (e) => {
@@ -51,7 +48,7 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
       return;
     }
     e.preventDefault();
-    createIssue();
+    pushIssue();
   };
 
   const onChangeTitle = (e) => {

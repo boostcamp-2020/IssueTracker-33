@@ -4,10 +4,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NewIssuePage from './Pages/NewIssuePage';
 import IssueMainPage from './Pages/IssueMainPage';
 import IssueDetailPage from './Pages/IssueDetailPage';
+import LoginPage from './Pages/LoginPage';
 
 const App = () => {
   return (
     <Router>
+      <Route exact path="/" component={LoginPage} />
       <Route exact path="/issues" component={IssueMainPage} />
       <Switch>
         <Route exact path="/issues/new" component={NewIssuePage} />
