@@ -70,6 +70,7 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
           url: 'http://localhost:3000/api/v1/images',
           data: datas,
           headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
         });
         setImageError(false);
         setComment(`${comment}\n![image](${result.data.imageLink})`);
