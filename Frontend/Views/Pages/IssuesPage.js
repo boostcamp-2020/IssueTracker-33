@@ -19,25 +19,29 @@ const IssuesPage = () => {
     const LABEL_URL = 'http://localhost:3000/api/v1/labels';
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
 
-    const queryForFiltering = window.location.search;
-    const issueProm = axios.get(`${ISSUE_URL}${queryForFiltering}`);
-    const userProm = axios.get(USER_URL);
-    const labelProm = axios.get(LABEL_URL);
-    const mileProm = axios.get(MILE_URL);
+    const issueProm = axios.get(ISSUE_URL, { withCredentials: true });
+    const userProm = axios.get(USER_URL, { withCredentials: true });
+    const labelProm = axios.get(LABEL_URL, { withCredentials: true });
+    const mileProm = axios.get(MILE_URL, { withCredentials: true });
 
-    const [issueResolve, userResolve, labelResolve, milesResolve] = await Promise.all([
-      issueProm,
-      userProm,
-      labelProm,
-      mileProm,
-    ]);
+    try {
+      const [issueResolve, userResolve, labelResolve, milesResolve] = await Promise.all([
+        issueProm,
+        userProm,
+        labelProm,
+        mileProm,
+      ]);
 
-    setData({
-      issueData: issueResolve.data,
-      userData: toKeyValueMap(userResolve.data),
-      labelData: toKeyValueMap(labelResolve.data),
-      mileData: toKeyValueMap(milesResolve.data),
-    });
+      setData({
+        issueData: issueResolve.data,
+        userData: toKeyValueMap(userResolve.data),
+        labelData: toKeyValueMap(labelResolve.data),
+        mileData: toKeyValueMap(milesResolve.data),
+      });
+    } catch (err) {
+      window.location.href = 'http://localhost:8000';
+    }
+
   }, []);
 
   return (

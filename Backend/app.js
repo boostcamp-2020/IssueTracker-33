@@ -1,15 +1,26 @@
+require('dotenv').config();
 const express = require('express');
 const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
 const cors = require('cors');
+
 const router = require('./Routes/index');
+const passportConfig = require('./Passport');
+const { tokenAllocate, tokenCheck } = require('./Passport/token');
 
 const app = express();
 app.use(logger('short'));
-
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(cors({ origin: true, credentials: true }));
 
-app.use('/api/v1', router);
+passportConfig();
 
-// app.set('port', 3000);
+app.use('/api/v1', tokenCheck, router);
+app.get('/auth/github', passport.authenticate('github', { session: false }));
+app.get('/auth/github/callback', passport.authenticate('github', { session: false }), tokenAllocate);
+
 app.listen(3000);
