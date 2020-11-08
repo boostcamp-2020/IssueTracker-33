@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const MarkAs = () => {
   return (
@@ -35,13 +35,7 @@ const MilestoneItem = ({ value }) => {
   );
 };
 
-const Dropdown = ({ name, values }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const onToggleDropdown = () => {
-    setIsVisible(!isVisible);
-  };
-
+const ChoiceList = ({ name, values }) => {
   let ItemComponent;
   switch (name) {
     case 'author':
@@ -84,22 +78,48 @@ const Dropdown = ({ name, values }) => {
 
   return (
     <>
-      <button type="button" onClick={onToggleDropdown}>
-        {name}
-      </button>
-      {isVisible && (
-        <>
-          <div>{`Filter by ${name}`}</div>
-          {Object.keys(values).map((key) => {
-            return (
-              <div key={key} onClick={() => onSelectAlmaItem(key)}>
-                <span>@</span>
-                <ItemComponent value={values[key]} />
-              </div>
-            );
-          })}
-        </>
-      )}
+      <div>{`Filter by ${name}`}</div>
+      {Object.keys(values).map((key) => {
+        return (
+          <div key={key} onClick={() => onSelectAlmaItem(key)}>
+            <span>@</span>
+            <ItemComponent value={values[key]} />
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+const Dropdown = ({ name, values }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const choiceListRef = useRef();
+
+  useEffect(() => {
+    const closeModal = (e) => {
+      if (choiceListRef.current && !choiceListRef.current.contains(e.target)) {
+        setIsVisible(false);
+      }
+    };
+    document.addEventListener('mousedown', closeModal);
+    return () => {
+      document.removeEventListener('mousedown', closeModal);
+    };
+  });
+
+  const onToggleDropdown = () => {
+    setIsVisible(!isVisible);
+  };
+
+  return (
+    <>
+      <div ref={choiceListRef}>
+        <button type="button" onClick={onToggleDropdown}>
+          {name}
+        </button>
+        {isVisible && <ChoiceList name={name} values={values} />}
+      </div>
     </>
   );
 };
