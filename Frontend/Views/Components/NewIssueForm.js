@@ -65,11 +65,8 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
       const datas = new FormData();
       datas.append('image', image, image.name);
       try {
-        const result = await axios({
-          method: 'post',
-          url: 'http://localhost:3000/api/v1/images',
-          data: datas,
-          headers: { 'Content-Type': 'multipart/form-data' },
+        const result = await axios.post('http://localhost:3000/api/v1/images', datas, {
+          'Content-Type': 'multipart/form-data',
           withCredentials: true,
         });
         setImageError(false);
