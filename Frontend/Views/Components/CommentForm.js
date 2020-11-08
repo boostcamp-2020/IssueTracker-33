@@ -2,8 +2,17 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ErrorMessage from './ErrorMessage';
 
-const CommentForm = ({ issueId, commentsData, setCommentsData }) => {
-  const [comment, setComment] = useState('');
+const CommentForm = ({
+  issueId,
+  commentsData,
+  setCommentsData,
+  description,
+  setDescription,
+  setIsDescription,
+  isEdit,
+  commentId,
+}) => {
+  const [comment, setComment] = useState(description);
   const [commentError, setCommentError] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(true);
@@ -30,10 +39,30 @@ const CommentForm = ({ issueId, commentsData, setCommentsData }) => {
     }
   };
 
+  const patchComment = async () => {
+    try {
+      return await axios.patch(
+        `http://localhost:3000/api/v1/comments/${commentId}`,
+        {
+          description: comment,
+        },
+        { withCredentials: true },
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const createComment = async () => {
     const result = await postComment();
     const [newComment] = result.data.comment;
     setCommentsData([...commentsData, newComment]);
+  };
+
+  const editComment = async () => {
+    const result = await patchComment();
+    setDescription(comment);
+    setIsDescription(true);
   };
 
   const onSubmitComment = (e) => {
@@ -47,7 +76,7 @@ const CommentForm = ({ issueId, commentsData, setCommentsData }) => {
       return;
     }
     e.preventDefault();
-    createComment();
+    (isEdit ? editComment : createComment)();
   };
 
   const onChangeComment = (e) => {
@@ -74,6 +103,10 @@ const CommentForm = ({ issueId, commentsData, setCommentsData }) => {
     }
   };
 
+  const onClickCancel = () => {
+    if (isEdit) setIsDescription(true);
+  };
+
   return (
     <>
       <textarea type="text" placeholder="Leave a comment" onChange={onChangeComment} value={comment} />
@@ -85,9 +118,11 @@ const CommentForm = ({ issueId, commentsData, setCommentsData }) => {
       />
       {commentError && <ErrorMessage message="본문을 입력해주세요." />}
       {imageError && <ErrorMessage message="이미지 업로드에 실패했습니다." />}
-      <button type="button">Close issue</button>
+      <button type="button" onClick={onClickCancel}>
+        {isEdit ? 'Cancel' : 'Close issue'}
+      </button>
       <button type="submit" onClick={onSubmitComment} disabled={submitDisabled}>
-        Comment
+        {isEdit ? 'Updatae Comment' : 'Comment'}
       </button>
     </>
   );
