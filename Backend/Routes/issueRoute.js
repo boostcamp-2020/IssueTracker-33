@@ -135,4 +135,16 @@ router.get('/:issueId/comments', async (req, res) => {
   }
 });
 
+router.patch('/:issueId/status', async (req, res) => {
+  try {
+    const { issueId } = req.params;
+    const { isOpen } = req.body;
+    const [{ affectedRows }] = await db.execute('UPDATE issues SET isOpen = ? WHERE id = ?', [isOpen, issueId]);
+    if (affectedRows !== 1) res.status(404).end();
+    else res.status(204).end();
+  } catch (err) {
+    res.status(400).end();
+  }
+});
+
 module.exports = router;
