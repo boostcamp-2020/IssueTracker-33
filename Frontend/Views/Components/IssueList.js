@@ -80,7 +80,7 @@ const MilestoneItem = ({ value }) => {
   );
 };
 
-const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown }) => {
+const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery }) => {
   let ItemComponent;
   switch (name) {
     case 'author':
@@ -120,6 +120,7 @@ const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown }) => {
     }, '');
     window.history.pushState({}, '', `/issues?${newQueryString}`);
     onToggleDropdown();
+    setResetQuery(true);
     reloadIssue();
   };
 
@@ -138,7 +139,7 @@ const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown }) => {
   );
 };
 
-const Dropdown = ({ name, values, reloadIssue }) => {
+const Dropdown = ({ name, values, reloadIssue, setResetQuery }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -156,20 +157,26 @@ const Dropdown = ({ name, values, reloadIssue }) => {
           {name}
         </button>
         {isVisible && (
-          <ChoiceList name={name} values={values} reloadIssue={reloadIssue} onToggleDropdown={onToggleDropdown} />
+          <ChoiceList
+            name={name}
+            values={values}
+            reloadIssue={reloadIssue}
+            onToggleDropdown={onToggleDropdown}
+            setResetQuery={setResetQuery}
+          />
         )}
       </div>
     </>
   );
 };
 
-const Alma = ({ users, labels, milestones, reloadIssue }) => {
+const Alma = ({ users, labels, milestones, reloadIssue, setResetQuery }) => {
   return (
     <>
-      <Dropdown name="author" values={users} reloadIssue={reloadIssue} />
-      <Dropdown name="label" values={labels} reloadIssue={reloadIssue} />
-      <Dropdown name="milestone" values={milestones} reloadIssue={reloadIssue} />
-      <Dropdown name="assignee" values={users} reloadIssue={reloadIssue} />
+      <Dropdown name="author" values={users} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <Dropdown name="label" values={labels} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <Dropdown name="milestone" values={milestones} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <Dropdown name="assignee" values={users} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
     </>
   );
 };
@@ -241,6 +248,8 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
   const [allChecked, setAllChecked] = useState(false);
   const [isMarkAs, setIsMarkAs] = useState(false);
 
+  const [resetQuery, setResetQuery] = useState(false);
+
   useEffect(() => {
     if (checkedIssues.length === 0) {
       setAllChecked(false);
@@ -266,11 +275,31 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
     }
   };
 
+  // TODO: 최초 진입이 쿼리스트링일 때는 resetQuery가 true여야 함.
+  const onClickReset = () => {
+    setResetQuery(false);
+    window.history.pushState({}, '', `/issues`);
+    reloadIssue();
+  };
+
   return (
     <div>
+      {resetQuery && (
+        <button type="button" onClick={onClickReset}>
+          Clear current search query, filters, and sorts
+        </button>
+      )}
       <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
       {isMarkAs && <MarkAs reloadIssue={reloadIssue} checkedIssues={checkedIssues} setIsMarkAs={setIsMarkAs} />}
-      {!isMarkAs && <Alma reloadIssue={reloadIssue} users={users} labels={labels} milestones={milestones} />}
+      {!isMarkAs && (
+        <Alma
+          reloadIssue={reloadIssue}
+          users={users}
+          labels={labels}
+          milestones={milestones}
+          setResetQuery={setResetQuery}
+        />
+      )}
       {issues.map((issue) => (
         <IssueListItem
           key={issue.id}
