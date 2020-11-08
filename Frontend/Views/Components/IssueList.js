@@ -1,20 +1,34 @@
 import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import useClickOutside from './Modal';
 
-const MarkAsList = () => {
-  const onClickOpen = null;
-  const onClickClosed = null;
+const MarkAsList = ({ checkedIssues }) => {
+  const onChangeStatus = async (status) => {
+    try {
+      await axios.patch(
+        'http://localhost:3000/api/v1/issues/status',
+        {
+          issues: checkedIssues,
+          isOpen: status,
+        },
+        { withCredentials: true },
+      );
+      // window.location.reload();
+    } catch (err) {
+      console.log('error');
+    }
+  };
 
   return (
     <>
       <div>Actions</div>
-      <div onClick={onClickOpen}>Open</div>
-      <div onClick={onClickClosed}>Closed</div>
+      <div onClick={() => onChangeStatus(1)}>Open</div>
+      <div onClick={() => onChangeStatus(0)}>Closed</div>
     </>
   );
 };
 
-const MarkAs = () => {
+const MarkAs = ({ checkedIssues }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -31,7 +45,7 @@ const MarkAs = () => {
         <button type="button" onClick={onToggleDropdown}>
           Mark as
         </button>
-        {isVisible && <MarkAsList />}
+        {isVisible && <MarkAsList checkedIssues={checkedIssues} />}
       </div>
     </>
   );
@@ -254,7 +268,7 @@ const IssueList = ({ issues, users, labels, milestones }) => {
   return (
     <div>
       <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-      {isMarkAs && <MarkAs />}
+      {isMarkAs && <MarkAs checkedIssues={checkedIssues} />}
       {!isMarkAs && <Alma users={users} labels={labels} milestones={milestones} />}
       {issues.map((issue) => (
         <IssueListItem
