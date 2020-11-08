@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import useClickOutside from './Modal';
 
 const MarkAs = () => {
   return (
@@ -94,18 +95,8 @@ const ChoiceList = ({ name, values }) => {
 const Dropdown = ({ name, values }) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const choiceListRef = useRef();
-
-  useEffect(() => {
-    const closeModal = (e) => {
-      if (choiceListRef.current && !choiceListRef.current.contains(e.target)) {
-        setIsVisible(false);
-      }
-    };
-    document.addEventListener('mousedown', closeModal);
-    return () => {
-      document.removeEventListener('mousedown', closeModal);
-    };
+  const domNode = useClickOutside(() => {
+    setIsVisible(false);
   });
 
   const onToggleDropdown = () => {
@@ -114,7 +105,7 @@ const Dropdown = ({ name, values }) => {
 
   return (
     <>
-      <div ref={choiceListRef}>
+      <div ref={domNode}>
         <button type="button" onClick={onToggleDropdown}>
           {name}
         </button>
