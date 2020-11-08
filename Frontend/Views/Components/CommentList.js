@@ -1,11 +1,11 @@
 import React from 'react';
-import Comment from './Comment';
+import CommentWrapper from './CommentWrapper';
 
 const CommentList = ({ commentsData, owner }) => {
   return (
     <>
       {commentsData.map((comment) => (
-        <Comment key={comment.id} description={comment.description} isOwner={owner === comment.userId} />
+        <CommentWrapper key={comment.id} comment={comment} isOwner={owner === comment.userId} />
       ))}
     </>
   );
