@@ -104,6 +104,8 @@ router.post('/', async (req, res) => {
   } catch {
     console.log('error');
     await conn.rollback();
+  } finally {
+    await conn.release();
   }
 });
 
