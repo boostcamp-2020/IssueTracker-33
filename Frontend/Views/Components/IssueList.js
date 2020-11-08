@@ -2,33 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import useClickOutside from './Modal';
 
-const MarkAsList = ({ checkedIssues }) => {
-  const onChangeStatus = async (status) => {
-    try {
-      await axios.patch(
-        'http://localhost:3000/api/v1/issues/status',
-        {
-          issues: checkedIssues,
-          isOpen: status,
-        },
-        { withCredentials: true },
-      );
-      // window.location.reload();
-    } catch (err) {
-      console.log('error');
-    }
-  };
-
-  return (
-    <>
-      <div>Actions</div>
-      <div onClick={() => onChangeStatus(1)}>Open</div>
-      <div onClick={() => onChangeStatus(0)}>Closed</div>
-    </>
-  );
-};
-
-const MarkAs = ({ checkedIssues }) => {
+const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -39,13 +13,41 @@ const MarkAs = ({ checkedIssues }) => {
     setIsVisible(!isVisible);
   };
 
+  const MarkAsList = () => {
+    const onChangeStatus = async (status) => {
+      try {
+        await axios.patch(
+          'http://localhost:3000/api/v1/issues/status',
+          {
+            issues: checkedIssues,
+            isOpen: status,
+          },
+          { withCredentials: true },
+        );
+        onToggleDropdown();
+        setIsMarkAs(false);
+        reloadIssue();
+      } catch (err) {
+        console.log('error');
+      }
+    };
+
+    return (
+      <>
+        <div>Actions</div>
+        <div onClick={() => onChangeStatus(1)}>Open</div>
+        <div onClick={() => onChangeStatus(0)}>Closed</div>
+      </>
+    );
+  };
+
   return (
     <>
       <div ref={domNode}>
         <button type="button" onClick={onToggleDropdown}>
           Mark as
         </button>
-        {isVisible && <MarkAsList checkedIssues={checkedIssues} />}
+        {isVisible && <MarkAsList checkedIssues={checkedIssues} reloadIssue={reloadIssue} />}
       </div>
     </>
   );
@@ -78,7 +80,7 @@ const MilestoneItem = ({ value }) => {
   );
 };
 
-const ChoiceList = ({ name, values }) => {
+const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown }) => {
   let ItemComponent;
   switch (name) {
     case 'author':
@@ -116,7 +118,9 @@ const ChoiceList = ({ name, values }) => {
     const newQueryString = Object.keys(newQuery).reduce((acc, key) => {
       return `${acc}${acc === '' ? '' : '&'}${key}=${newQuery[key]}`;
     }, '');
-    window.location.search = `?${newQueryString}`;
+    window.history.pushState({}, '', `/issues?${newQueryString}`);
+    onToggleDropdown();
+    reloadIssue();
   };
 
   return (
@@ -134,7 +138,7 @@ const ChoiceList = ({ name, values }) => {
   );
 };
 
-const Dropdown = ({ name, values }) => {
+const Dropdown = ({ name, values, reloadIssue }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -151,19 +155,21 @@ const Dropdown = ({ name, values }) => {
         <button type="button" onClick={onToggleDropdown}>
           {name}
         </button>
-        {isVisible && <ChoiceList name={name} values={values} />}
+        {isVisible && (
+          <ChoiceList name={name} values={values} reloadIssue={reloadIssue} onToggleDropdown={onToggleDropdown} />
+        )}
       </div>
     </>
   );
 };
 
-const Alma = ({ users, labels, milestones }) => {
+const Alma = ({ users, labels, milestones, reloadIssue }) => {
   return (
     <>
-      <Dropdown name="author" values={users} />
-      <Dropdown name="label" values={labels} />
-      <Dropdown name="milestone" values={milestones} />
-      <Dropdown name="assignee" values={users} />
+      <Dropdown name="author" values={users} reloadIssue={reloadIssue} />
+      <Dropdown name="label" values={labels} reloadIssue={reloadIssue} />
+      <Dropdown name="milestone" values={milestones} reloadIssue={reloadIssue} />
+      <Dropdown name="assignee" values={users} reloadIssue={reloadIssue} />
     </>
   );
 };
@@ -229,16 +235,11 @@ const IssueListItem = ({
   );
 };
 
-const IssueList = ({ issues, users, labels, milestones }) => {
+const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
   const [checkedIssues, setCheckedIssues] = useState([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [allChecked, setAllChecked] = useState(false);
   const [isMarkAs, setIsMarkAs] = useState(false);
-
-  // 콘솔에 선택된 이슈 디버깅 용도입니다. 이후 삭제해도 무방합니다.
-  useEffect(() => {
-    console.log(checkedIssues);
-  }, [JSON.stringify(checkedIssues)]);
 
   useEffect(() => {
     if (checkedIssues.length === 0) {
@@ -268,8 +269,8 @@ const IssueList = ({ issues, users, labels, milestones }) => {
   return (
     <div>
       <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-      {isMarkAs && <MarkAs checkedIssues={checkedIssues} />}
-      {!isMarkAs && <Alma users={users} labels={labels} milestones={milestones} />}
+      {isMarkAs && <MarkAs reloadIssue={reloadIssue} checkedIssues={checkedIssues} setIsMarkAs={setIsMarkAs} />}
+      {!isMarkAs && <Alma reloadIssue={reloadIssue} users={users} labels={labels} milestones={milestones} />}
       {issues.map((issue) => (
         <IssueListItem
           key={issue.id}

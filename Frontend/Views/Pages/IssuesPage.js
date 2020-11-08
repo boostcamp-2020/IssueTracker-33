@@ -12,14 +12,22 @@ const toKeyValueMap = (records) => {
 
 const IssuesPage = () => {
   const [data, setData] = useState({ issueData: [], userData: [], labelData: [], mileData: [] });
+  const [issueReload, setIssueReload] = useState(true);
+
+  const reloadIssue = () => {
+    console.log('reloadIssue');
+    setIssueReload(!issueReload);
+  };
 
   useEffect(async () => {
+    console.log('hi');
     const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
     const USER_URL = 'http://localhost:3000/api/v1/users';
     const LABEL_URL = 'http://localhost:3000/api/v1/labels';
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
 
     const queryString = window.location.search;
+    console.log(queryString);
     const issueProm = axios.get(`${ISSUE_URL}${queryString}`, { withCredentials: true });
     const userProm = axios.get(USER_URL, { withCredentials: true });
     const labelProm = axios.get(LABEL_URL, { withCredentials: true });
@@ -42,11 +50,17 @@ const IssuesPage = () => {
     } catch (err) {
       window.location.href = 'http://localhost:8000';
     }
-  }, []);
+  }, [issueReload]);
 
   return (
     <div>
-      <IssueList issues={data.issueData} users={data.userData} labels={data.labelData} milestones={data.mileData} />
+      <IssueList
+        issues={data.issueData}
+        users={data.userData}
+        labels={data.labelData}
+        milestones={data.mileData}
+        reloadIssue={reloadIssue}
+      />
     </div>
   );
 };
