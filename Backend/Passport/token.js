@@ -14,7 +14,6 @@ exports.tokenCheck = async (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    // res.status(401).json();
     res.redirect('http://localhost:8000');
   }
 };
