@@ -147,4 +147,30 @@ router.patch('/:issueId/status', async (req, res) => {
   }
 });
 
+router.patch('/status', async (req, res) => {
+  let conn = null;
+  const { issues, isOpen } = req.body;
+  try {
+    conn = await db.getConnection();
+
+    await conn.beginTransaction();
+    const querys = issues.map((issueId) => {
+      return conn.execute('UPDATE issues SET isOpen = ? WHERE id = ?', [isOpen, issueId]);
+    });
+
+    const isFailure = (await Promise.all(querys)).some(([{ affectedRows }]) => affectedRows !== 1);
+    if (isFailure) {
+      await conn.rollback();
+      return res.status(404).end();
+    }
+    await conn.commit();
+    res.status(204).end();
+  } catch (err) {
+    if (conn) await conn.rollback();
+    res.status(400).end();
+  } finally {
+    if (conn) await conn.release();
+  }
+});
+
 module.exports = router;
