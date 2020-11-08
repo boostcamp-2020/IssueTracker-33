@@ -9,7 +9,7 @@ const MilestoneList = (milestoneList) => {
 
     console.log(issueResolve.data);
     // milestoneList.map((m) => console.log(m));
-  }, []);
+  }, [milestoneList]);
 
   return <div>asdsad</div>;
 };

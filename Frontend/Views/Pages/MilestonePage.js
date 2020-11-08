@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import MilestoneList from '../Components/MilestoneList';
+import Milestone from '../Components/Milestone';
 
 const MilestonePage = () => {
-  const [allMilestones, setAllMilestones] = useState();
+  const [milestoneList, setMilestoneList] = useState([]);
 
   useEffect(async () => {
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
     try {
       const milesResolve = await axios.get(MILE_URL, { withCredentials: true });
-      setAllMilestones(milesResolve.data);
+      setMilestoneList([...milesResolve.data]);
     } catch (err) {
       window.location.href = 'http://localhost:8000';
     }
@@ -20,8 +20,9 @@ const MilestonePage = () => {
     <div>
       <Link to="/labels">labels</Link>
       <Link to="/milestones">milestones</Link>
-      <MilestoneList milestoneList={allMilestones} />
-      {console.log(allMilestones)}
+      {milestoneList.map((milestone) => (
+        <Milestone key={milestone.id} milestone={milestone} />
+      ))}
     </div>
   );
 };

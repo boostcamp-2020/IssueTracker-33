@@ -2,7 +2,8 @@ const router = require('express').Router();
 const { db } = require('../Models/dbPool');
 
 const MileCallIssue = async (req, res, next) => {
-  const sql = `SELECT milestoneId, COUNT(id) FROM issues GROUP BY milestoneId HAVING NOT milestoneId is NULL`;
+  const { milestoneId } = req.query;
+  const sql = `SELECT isOpen, COUNT(*) as cnt FROM issues WHERE milestoneId=${milestoneId} GROUP BY isOpen`;
   const [result] = await db.execute(sql);
   res.json(result);
 };
