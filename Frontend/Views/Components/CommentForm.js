@@ -122,7 +122,7 @@ const CommentForm = ({
         {isEdit ? 'Cancel' : 'Close issue'}
       </button>
       <button type="submit" onClick={onSubmitComment} disabled={submitDisabled}>
-        {isEdit ? 'Updatae Comment' : 'Comment'}
+        {isEdit ? 'Update comment' : 'Comment'}
       </button>
     </>
   );
