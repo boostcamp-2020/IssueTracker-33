@@ -1,11 +1,19 @@
 const jwt = require('jsonwebtoken');
+const { db } = require('../Models/dbPool');
 
-exports.tokenCheck = (req, res, next) => {
+exports.tokenCheck = async (req, res, next) => {
   try {
-    const cookie = req.cookies.jwt;
-    jwt.verify(cookie, process.env.TOKEN_SECRET_KEY);
+    const decodedToken = jwt.verify(req.cookies.jwt, process.env.TOKEN_SECRET_KEY);
+    const selectSql = `SELECT id,username,imageLink FROM users WHERE id='${decodedToken.userId}'`;
+    const [[result]] = await db.execute(selectSql);
+
+    if (!result) {
+      throw new Error('cannot find user at Database');
+    }
+    req.user = result;
     next();
   } catch (err) {
+    console.log(err);
     // res.status(401).json();
     res.redirect('http://localhost:8000');
   }
