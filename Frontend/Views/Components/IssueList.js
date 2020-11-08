@@ -1,10 +1,38 @@
 import React, { useEffect, useState, useRef } from 'react';
 import useClickOutside from './Modal';
 
-const MarkAs = () => {
+const MarkAsList = () => {
+  const onClickOpen = null;
+  const onClickClosed = null;
+
   return (
     <>
-      <button type="button">Mark as</button>
+      <div>Actions</div>
+      <div onClick={onClickOpen}>Open</div>
+      <div onClick={onClickClosed}>Closed</div>
+    </>
+  );
+};
+
+const MarkAs = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const domNode = useClickOutside(() => {
+    setIsVisible(false);
+  });
+
+  const onToggleDropdown = () => {
+    setIsVisible(!isVisible);
+  };
+
+  return (
+    <>
+      <div ref={domNode}>
+        <button type="button" onClick={onToggleDropdown}>
+          Mark as
+        </button>
+        {isVisible && <MarkAsList />}
+      </div>
     </>
   );
 };
