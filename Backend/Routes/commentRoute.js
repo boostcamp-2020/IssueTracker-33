@@ -21,4 +21,15 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.patch('/:commentId', async (req, res) => {
+  const { description } = req.body;
+  const { commentId } = req.params;
+  try {
+    const [result] = await db.execute('UPDATE comments SET description = ? WHERE id = ?', [description, commentId]);
+    res.status(200).json({ result });
+  } catch (err) {
+    res.status(400).end();
+  }
+});
+
 module.exports = router;
