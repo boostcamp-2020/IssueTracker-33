@@ -3,8 +3,8 @@ import axios from 'axios';
 
 const NewMilestonePage = () => {
   const [inputTitle, setTitle] = useState('');
-  const [inputDate, setDate] = useState('');
-  const [inputDescription, setDescription] = useState('');
+  const [inputDate, setDate] = useState(null);
+  const [inputDescription, setDescription] = useState(null);
 
   const postMilestone = async () => {
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
