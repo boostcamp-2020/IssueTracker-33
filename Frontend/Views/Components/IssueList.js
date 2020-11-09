@@ -8,7 +8,7 @@ const getUserId = (cookie) => {
   return userId;
 };
 
-const TopFilter = ({ reloadIssue }) => {
+const TopFilter = ({ reloadIssue, setResetQuery }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -22,6 +22,7 @@ const TopFilter = ({ reloadIssue }) => {
   const onClickFilter = (queryString) => {
     window.history.pushState({}, '', `/issues?${queryString}`);
     onToggleDropdown();
+    setResetQuery(true);
     reloadIssue();
   };
 
@@ -332,7 +333,7 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
 
   return (
     <div>
-      <TopFilter reloadIssue={reloadIssue} />
+      <TopFilter reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
       {resetQuery && (
         <button type="button" onClick={onClickReset}>
           Clear current search query, filters, and sorts
