@@ -5,6 +5,8 @@ import NewIssuePage from './Pages/NewIssuePage';
 import IssueMainPage from './Pages/IssueMainPage';
 import IssueDetailPage from './Pages/IssueDetailPage';
 import LoginPage from './Pages/LoginPage';
+import LabelPage from './Pages/LabelPage';
+import MilestonPage from './Pages/MilestonePage';
 
 const App = () => {
   return (
@@ -15,6 +17,8 @@ const App = () => {
         <Route exact path="/issues/new" component={NewIssuePage} />
         <Route exact path="/issues/:issueId" component={IssueDetailPage} />
       </Switch>
+      <Route exact path="/milestones" component={MilestonPage} />
+      <Route exact path="/labels" component={LabelPage} />
     </Router>
   );
 };

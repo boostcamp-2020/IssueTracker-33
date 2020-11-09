@@ -23,9 +23,10 @@ router.get('/', async (req, res) => {
       innerFilterCondition.push('milestoneId = ?');
       filterValues.push(milestone);
     }
+
     const whereClause = innerFilterCondition.length ? `WHERE ${innerFilterCondition.join(' AND ')}` : '';
     let baseQuery = `SELECT id, A.userId, title, milestoneId, isOpen, createdAt, openCloseAt
-                     FROM (SELECT * FROM issues ${whereClause}) AS A`;
+    FROM (SELECT * FROM issues ${whereClause}) AS A`;
 
     if (label || assignee) {
       let joinClause = ' ';
