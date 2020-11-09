@@ -3,7 +3,7 @@ const { db } = require('../Models/dbPool');
 
 router.get('/', async (req, res) => {
   try {
-    const { open, author, milestone, label, assignee } = req.query;
+    const { open, author, milestone, label, assignee, mentions } = req.query;
 
     const innerFilterCondition = [];
     const filterValues = [];
@@ -25,22 +25,28 @@ router.get('/', async (req, res) => {
     }
 
     const whereClause = innerFilterCondition.length ? `WHERE ${innerFilterCondition.join(' AND ')}` : '';
-    let baseQuery = `SELECT id, A.userId, title, milestoneId, isOpen, createdAt, openCloseAt
-    FROM (SELECT * FROM issues ${whereClause}) AS A`;
+    let baseQuery = `SELECT DISTINCT ISS.id, ISS.userId, ISS.title, ISS.milestoneId, ISS.isOpen, ISS.createdAt, ISS.openCloseAt
+                     FROM (SELECT * FROM issues ${whereClause}) AS ISS`;
 
-    if (label || assignee) {
+    if (label || assignee || mentions) {
       let joinClause = ' ';
       let joinWhereClause = ' WHERE ';
       if (label) {
-        joinClause += ' inner join labelIssue on A.id = labelIssue.issueId ';
+        joinClause += ' inner join labelIssue on ISS.id = labelIssue.issueId ';
         joinWhereClause += ' labelIssue.labelId = ? ';
         filterValues.push(label);
       }
       if (assignee) {
-        joinClause += ' inner join assignees on A.id = assignees.issueId ';
+        joinClause += ' inner join assignees on ISS.id = assignees.issueId ';
         joinWhereClause += label ? ' AND ' : '';
         joinWhereClause += ' assignees.userId = ? ';
         filterValues.push(assignee);
+      }
+      if (mentions) {
+        joinClause += ' inner join comments on ISS.id = comments.issueId ';
+        joinWhereClause += label || assignee ? ' AND ' : '';
+        joinWhereClause += ' comments.userId = ? ';
+        filterValues.push(mentions);
       }
       baseQuery += joinClause + joinWhereClause;
     }
