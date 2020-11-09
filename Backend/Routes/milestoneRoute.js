@@ -2,16 +2,14 @@ const router = require('express').Router();
 const { db } = require('../Models/dbPool');
 
 router.get('/count', async (req, res) => {
-  const sql = `
+  const query = `
   SELECT mi.id, mi.isOpen as mileIsOpen, mi.dueDate, mi.description, mi.title, iss.isOpen as issueIsOpen, COUNT(iss.id) as cnt
   FROM milestones mi LEFT JOIN issues iss ON mi.id = iss.milestoneId
-  GROUP BY mi.id, iss.isOpen ORDER BY mi.id
-  `;
-  const [rows] = await db.execute(sql);
+  GROUP BY mi.id, iss.isOpen`;
+  const [rows] = await db.execute(query);
   const result = {};
 
-  // eslint-disable-next-line array-callback-return
-  rows.map((row) => {
+  rows.forEach((row) => {
     if (result[row.id]) {
       result[row.id].total += row.cnt;
       if (row.issueIsOpen) {
@@ -37,13 +35,12 @@ router.get('/count', async (req, res) => {
       }
     }
   });
-
   res.json(result);
 });
 
 router.get('/', async (req, res) => {
-  const sql = `SELECT * FROM milestones`;
-  const results = await db.execute(sql);
+  const query = `SELECT * FROM milestones`;
+  const results = await db.execute(query);
   res.json(results[0]);
 });
 
