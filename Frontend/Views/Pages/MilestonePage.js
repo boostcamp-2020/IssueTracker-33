@@ -5,6 +5,7 @@ import Milestone from '../Components/Milestone';
 
 const MilestonePage = () => {
   const [milestoneList, setMilestoneList] = useState([]);
+  const [whichMile, setWhichMile] = useState(1);
 
   useEffect(async () => {
     const MILE_URL = 'http://localhost:3000/api/v1/milestones/count';
@@ -16,14 +17,31 @@ const MilestonePage = () => {
     }
   }, []);
 
+  const openBtnClick = () => {
+    setWhichMile(1);
+  };
+  const closeBtnClick = () => {
+    setWhichMile(0);
+  };
+
   return (
     <div>
       <Link to="/labels">labels</Link>
       <Link to="/milestones">milestones</Link>
       <Link to="/milestones/new">new Milestone</Link>
-      {milestoneList.map((milestone) => (
-        <Milestone key={milestone.id} milestone={milestone} />
-      ))}
+
+      <button type="button" onClick={openBtnClick}>
+        Open
+      </button>
+      <button type="button" onClick={closeBtnClick}>
+        Close
+      </button>
+
+      {milestoneList
+        .filter((milestone) => milestone.mileIsOpen === whichMile)
+        .map((milestone) => (
+          <Milestone key={milestone.id} milestone={milestone} />
+        ))}
     </div>
   );
 };
