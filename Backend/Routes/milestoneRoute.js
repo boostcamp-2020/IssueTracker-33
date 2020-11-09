@@ -44,4 +44,11 @@ router.get('/', async (req, res) => {
   res.json(results[0]);
 });
 
+router.post('/', async (req, res) => {
+  const query = `INSERT INTO milestones(title, dueDate, description, isOpen) VALUES(?,?,?,?)`;
+  const { title, dueDate, description } = req.body;
+  await db.execute(query, [title, dueDate, description, 1]);
+  res.json({});
+});
+
 module.exports = router;
