@@ -2,6 +2,59 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import useClickOutside from './Modal';
 
+const TopFilter = ({ reloadIssue }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const domNode = useClickOutside(() => {
+    setIsVisible(false);
+  });
+
+  const onToggleDropdown = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const onClickFilter = (queryString) => {
+    window.history.pushState({}, '', `/issues?${queryString}`);
+    onToggleDropdown();
+    reloadIssue();
+  };
+
+  const TopFilterMenu = () => {
+    return (
+      <>
+        <div>Filter Issues</div>
+        <div onClick={() => onClickFilter('open=1')}>Open Issues</div>
+        {/* TODO: 본인 id로 넘겨주는건지 백에서 처리하는 건지 */}
+        <div
+          onClick={() => {
+            const token = document.cookie.split('=')[1].split('.');
+            // const newToken = token.map((t) => console.log(t));
+            console.log(window.atob(token[1]));
+            // console.log(token.length);
+          }}
+        >
+          Your Issues
+        </div>
+        <div onClick={() => onClickFilter()}>Everything assigned to you</div>
+        <div onClick={() => onClickFilter()}>Everything mentioning you</div>
+        <div onClick={() => onClickFilter('open=0')}>Closed Issues</div>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <div ref={domNode}>
+        <button type="button" onClick={onToggleDropdown}>
+          Filters
+        </button>
+        <input type="text" />
+        {isVisible && <TopFilterMenu />}
+      </div>
+    </>
+  );
+};
+
 const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs }) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -284,6 +337,7 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
 
   return (
     <div>
+      <TopFilter reloadIssue={reloadIssue} />
       {resetQuery && (
         <button type="button" onClick={onClickReset}>
           Clear current search query, filters, and sorts
