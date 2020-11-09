@@ -17,10 +17,10 @@ const MilestonePage = () => {
     }
   }, []);
 
-  const openBtnClick = () => {
+  const onOpenBtnClick = () => {
     setWhichMile(1);
   };
-  const closeBtnClick = () => {
+  const onCloseBtnClick = () => {
     setWhichMile(0);
   };
 
@@ -30,10 +30,10 @@ const MilestonePage = () => {
       <Link to="/milestones">milestones</Link>
       <Link to="/milestones/new">new Milestone</Link>
 
-      <button type="button" onClick={openBtnClick}>
+      <button type="button" onClick={onOpenBtnClick}>
         Open
       </button>
-      <button type="button" onClick={closeBtnClick}>
+      <button type="button" onClick={onCloseBtnClick}>
         Close
       </button>
 

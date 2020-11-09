@@ -1,6 +1,29 @@
 const router = require('express').Router();
 const { db } = require('../Models/dbPool');
 
+router.patch('/:milestoneId', async (req, res) => {
+  const { title, dueDate, description, isOpen } = req.body;
+  const { milestoneId } = req.params;
+
+  const setClause = [];
+  if (title) {
+    setClause.push(`title='${title}'`);
+  }
+  if (dueDate) {
+    setClause.push(`dueDate='${dueDate}'`);
+  }
+  if (description) {
+    setClause.push(`description='${description}'`);
+  }
+  if (isOpen !== undefined) {
+    setClause.push(`isOpen='${isOpen}'`);
+  }
+
+  const query = `UPDATE milestones SET ${setClause.join(',')} WHERE id='${milestoneId[1]}'`;
+  await db.execute(query);
+  res.json({});
+});
+
 router.get('/count', async (req, res) => {
   const query = `
   SELECT mi.id, mi.isOpen as mileIsOpen, mi.dueDate, mi.description, mi.title, iss.isOpen as issueIsOpen, COUNT(iss.id) as cnt
@@ -21,7 +44,7 @@ router.get('/count', async (req, res) => {
       result[row.id] = {
         id: row.id,
         mileIsOpen: row.mileIsOpen,
-        dueData: row.dueDate,
+        dueDate: row.dueDate,
         description: row.description,
         title: row.title,
         total: row.cnt || 0,
