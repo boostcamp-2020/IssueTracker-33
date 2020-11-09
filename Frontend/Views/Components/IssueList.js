@@ -2,6 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import useClickOutside from './Modal';
 
+const getUserId = (cookie) => {
+  const token = cookie.split('=')[1].split('.');
+  const { userId } = JSON.parse(window.atob(token[1]));
+  return userId;
+};
+
 const TopFilter = ({ reloadIssue }) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -25,17 +31,8 @@ const TopFilter = ({ reloadIssue }) => {
         <div>Filter Issues</div>
         <div onClick={() => onClickFilter('open=1')}>Open Issues</div>
         {/* TODO: 본인 id로 넘겨주는건지 백에서 처리하는 건지 */}
-        <div
-          onClick={() => {
-            const token = document.cookie.split('=')[1].split('.');
-            // const newToken = token.map((t) => console.log(t));
-            console.log(window.atob(token[1]));
-            // console.log(token.length);
-          }}
-        >
-          Your Issues
-        </div>
-        <div onClick={() => onClickFilter()}>Everything assigned to you</div>
+        <div onClick={() => onClickFilter(`author=${getUserId(document.cookie)}`)}>Your Issues</div>
+        <div onClick={() => onClickFilter(`assignee=${getUserId(document.cookie)}`)}>Everything assigned to you</div>
         <div onClick={() => onClickFilter()}>Everything mentioning you</div>
         <div onClick={() => onClickFilter('open=0')}>Closed Issues</div>
       </>
