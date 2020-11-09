@@ -15,12 +15,10 @@ const IssuesPage = () => {
   const [issueReload, setIssueReload] = useState(true);
 
   const reloadIssue = () => {
-    console.log('reloadIssue');
     setIssueReload(!issueReload);
   };
 
   useEffect(async () => {
-    console.log('hi');
     const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
     const USER_URL = 'http://localhost:3000/api/v1/users';
     const LABEL_URL = 'http://localhost:3000/api/v1/labels';
