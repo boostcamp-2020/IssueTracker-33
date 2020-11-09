@@ -30,10 +30,9 @@ const TopFilter = ({ reloadIssue }) => {
       <>
         <div>Filter Issues</div>
         <div onClick={() => onClickFilter('open=1')}>Open Issues</div>
-        {/* TODO: 본인 id로 넘겨주는건지 백에서 처리하는 건지 */}
         <div onClick={() => onClickFilter(`author=${getUserId(document.cookie)}`)}>Your Issues</div>
         <div onClick={() => onClickFilter(`assignee=${getUserId(document.cookie)}`)}>Everything assigned to you</div>
-        <div onClick={() => onClickFilter()}>Everything mentioning you</div>
+        <div onClick={() => onClickFilter(`mentions=${getUserId(document.cookie)}`)}>Everything mentioning you</div>
         <div onClick={() => onClickFilter('open=0')}>Closed Issues</div>
       </>
     );
