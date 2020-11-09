@@ -7,10 +7,10 @@ const MilestonePage = () => {
   const [milestoneList, setMilestoneList] = useState([]);
 
   useEffect(async () => {
-    const MILE_URL = 'http://localhost:3000/api/v1/milestones';
+    const MILE_URL = 'http://localhost:3000/api/v1/milestones/count';
     try {
       const milesResolve = await axios.get(MILE_URL, { withCredentials: true });
-      setMilestoneList([...milesResolve.data]);
+      setMilestoneList([...Object.values(milesResolve.data)]);
     } catch (err) {
       window.location.href = 'http://localhost:8000';
     }
