@@ -296,8 +296,7 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [allChecked, setAllChecked] = useState(false);
   const [isMarkAs, setIsMarkAs] = useState(false);
-
-  const [resetQuery, setResetQuery] = useState(false);
+  const [resetQuery, setResetQuery] = useState(window.location.search !== '');
 
   useEffect(() => {
     if (checkedIssues.length === 0) {
