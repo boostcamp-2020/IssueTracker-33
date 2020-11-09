@@ -20,6 +20,7 @@ const MilestonePage = () => {
     <div>
       <Link to="/labels">labels</Link>
       <Link to="/milestones">milestones</Link>
+      <Link to="/milestones/new">new Milestone</Link>
       {milestoneList.map((milestone) => (
         <Milestone key={milestone.id} milestone={milestone} />
       ))}
