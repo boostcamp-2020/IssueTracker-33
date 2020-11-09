@@ -25,7 +25,6 @@ const IssuesPage = () => {
     const MILE_URL = 'http://localhost:3000/api/v1/milestones';
 
     const queryString = window.location.search;
-    console.log(queryString);
     const issueProm = axios.get(`${ISSUE_URL}${queryString}`, { withCredentials: true });
     const userProm = axios.get(USER_URL, { withCredentials: true });
     const labelProm = axios.get(LABEL_URL, { withCredentials: true });
