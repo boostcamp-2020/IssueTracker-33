@@ -5,8 +5,12 @@ import IssuesPage from './IssuesPage';
 const IssueMainPage = () => {
   return (
     <div>
-      <Link to="/labels">labels</Link>
-      <Link to="/milestones">milestone</Link>
+      <Link to="/labels">
+        <button type="button">Lables</button>
+      </Link>
+      <Link to="/milestones">
+        <button type="button">Milestones</button>
+      </Link>
       <Link to="/issues/new">new Issue</Link>
       <IssuesPage />
     </div>
