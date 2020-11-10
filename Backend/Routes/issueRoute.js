@@ -174,6 +174,8 @@ router.patch('/:issueId/labels', async (req, res) => {
   } catch (err) {
     await conn.rollback();
     res.status(400).end();
+  } finally {
+    conn.release();
   }
 });
 
@@ -195,6 +197,8 @@ router.patch('/:issueId/assignees', async (req, res) => {
   } catch (err) {
     await conn.rollback();
     res.status(400).end();
+  } finally {
+    conn.release();
   }
 });
 
