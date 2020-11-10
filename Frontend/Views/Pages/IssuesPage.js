@@ -49,6 +49,12 @@ const IssuesPage = () => {
     }
   }, [issueReload]);
 
+  useEffect(() => {
+    const reloadWhenPopstate = () => reloadIssue();
+    window.addEventListener('popstate', reloadWhenPopstate);
+    return () => window.removeEventListener('popstate', reloadWhenPopstate);
+  }, []);
+
   return (
     <div>
       <IssueList
