@@ -15,7 +15,7 @@ const IssuesPage = () => {
   const [issueReload, setIssueReload] = useState(true);
 
   const reloadIssue = () => {
-    setIssueReload(!issueReload);
+    setIssueReload((prevIssueReload) => !prevIssueReload);
   };
 
   useEffect(async () => {
