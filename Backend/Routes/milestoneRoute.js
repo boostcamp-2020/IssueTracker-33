@@ -79,4 +79,11 @@ router.post('/', async (req, res) => {
   res.json({});
 });
 
+router.delete('/', async (req, res) => {
+  const query = `DELETE FROM milestones WHERE id=? `;
+  const { milestoneId } = req.params;
+  await db.execute(query, milestoneId);
+  res.json({});
+});
+
 module.exports = router;
