@@ -14,12 +14,12 @@ exports.tokenCheck = async (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    res.redirect('http://localhost:8000');
+    res.redirect(process.env.NODE_ENV ? process.env.PROD_WEB_URL : process.env.DEV_WEB_URL);
   }
 };
 
 exports.tokenAllocate = (req, res) => {
   const encodedToken = jwt.sign(req.user, process.env.TOKEN_SECRET_KEY);
   res.cookie('jwt', encodedToken);
-  res.redirect('http://localhost:8000/issues');
+  res.redirect(process.env.NODE_ENV ? `${process.env.PROD_WEB_URL}/issues` : `${process.env.DEV_WEB_URL}/issues`);
 };
