@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import LabelList from '../Components/LabelList';
 import LabelForm from '../Components/LabelForm';
@@ -19,8 +20,12 @@ const LabelPage = () => {
   return (
     <>
       <div>
-        <button type="button">Lables</button>
-        <button type="button">Milestones</button>
+        <Link to="/labels">
+          <button type="button">Lables</button>
+        </Link>
+        <Link to="/milestones">
+          <button type="button">Milestones</button>
+        </Link>
         <button type="button" onClick={onToggleForm}>
           New Label
         </button>
