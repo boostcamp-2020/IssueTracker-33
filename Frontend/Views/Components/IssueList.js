@@ -1,9 +1,104 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
+import useClickOutside from './Modal';
 
-const MarkAs = () => {
+const getUserId = (cookie) => {
+  const token = cookie.split('=')[1].split('.');
+  const { userId } = JSON.parse(window.atob(token[1]));
+  return userId;
+};
+
+const TopFilter = ({ reloadIssue, setResetQuery }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const domNode = useClickOutside(() => {
+    setIsVisible(false);
+  });
+
+  const onToggleDropdown = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const onClickFilter = (queryString) => {
+    window.history.pushState({}, '', `/issues?${queryString}`);
+    onToggleDropdown();
+    setResetQuery(true);
+    reloadIssue();
+  };
+
+  const TopFilterMenu = () => {
+    return (
+      <>
+        <div>Filter Issues</div>
+        <div onClick={() => onClickFilter('open=1')}>Open Issues</div>
+        <div onClick={() => onClickFilter(`author=${getUserId(document.cookie)}`)}>Your Issues</div>
+        <div onClick={() => onClickFilter(`assignee=${getUserId(document.cookie)}`)}>Everything assigned to you</div>
+        <div onClick={() => onClickFilter(`mentions=${getUserId(document.cookie)}`)}>Everything mentioning you</div>
+        <div onClick={() => onClickFilter('open=0')}>Closed Issues</div>
+      </>
+    );
+  };
+
   return (
     <>
-      <button type="button">Mark as</button>
+      <div ref={domNode}>
+        <button type="button" onClick={onToggleDropdown}>
+          Filters
+        </button>
+        <input type="text" />
+        {isVisible && <TopFilterMenu />}
+      </div>
+    </>
+  );
+};
+
+const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const domNode = useClickOutside(() => {
+    setIsVisible(false);
+  });
+
+  const onToggleDropdown = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const MarkAsList = () => {
+    const onChangeStatus = async (status) => {
+      try {
+        await axios.patch(
+          'http://localhost:3000/api/v1/issues/status',
+          {
+            issues: checkedIssues,
+            isOpen: status,
+          },
+          { withCredentials: true },
+        );
+        onToggleDropdown();
+        setIsMarkAs(false);
+        reloadIssue();
+      } catch (err) {
+        console.log('error');
+      }
+    };
+
+    return (
+      <>
+        <div>Actions</div>
+        <div onClick={() => onChangeStatus(1)}>Open</div>
+        <div onClick={() => onChangeStatus(0)}>Closed</div>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <div ref={domNode}>
+        <button type="button" onClick={onToggleDropdown}>
+          Mark as
+        </button>
+        {isVisible && <MarkAsList checkedIssues={checkedIssues} reloadIssue={reloadIssue} />}
+      </div>
     </>
   );
 };
@@ -35,13 +130,7 @@ const MilestoneItem = ({ value }) => {
   );
 };
 
-const Dropdown = ({ name, values }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const onToggleDropdown = () => {
-    setIsVisible(!isVisible);
-  };
-
+const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery }) => {
   let ItemComponent;
   switch (name) {
     case 'author':
@@ -79,38 +168,65 @@ const Dropdown = ({ name, values }) => {
     const newQueryString = Object.keys(newQuery).reduce((acc, key) => {
       return `${acc}${acc === '' ? '' : '&'}${key}=${newQuery[key]}`;
     }, '');
-    window.location.search = `?${newQueryString}`;
+    window.history.pushState({}, '', `/issues?${newQueryString}`);
+    onToggleDropdown();
+    setResetQuery(true);
+    reloadIssue();
   };
 
   return (
     <>
-      <button type="button" onClick={onToggleDropdown}>
-        {name}
-      </button>
-      {isVisible && (
-        <>
-          <div>{`Filter by ${name}`}</div>
-          {Object.keys(values).map((key) => {
-            return (
-              <div key={key} onClick={() => onSelectAlmaItem(key)}>
-                <span>@</span>
-                <ItemComponent value={values[key]} />
-              </div>
-            );
-          })}
-        </>
-      )}
+      <div>{`Filter by ${name}`}</div>
+      {Object.keys(values).map((key) => {
+        return (
+          <div key={key} onClick={() => onSelectAlmaItem(key)}>
+            <span>@</span>
+            <ItemComponent value={values[key]} />
+          </div>
+        );
+      })}
     </>
   );
 };
 
-const Alma = ({ users, labels, milestones }) => {
+const Dropdown = ({ name, values, reloadIssue, setResetQuery }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const domNode = useClickOutside(() => {
+    setIsVisible(false);
+  });
+
+  const onToggleDropdown = () => {
+    setIsVisible(!isVisible);
+  };
+
   return (
     <>
-      <Dropdown name="author" values={users} />
-      <Dropdown name="label" values={labels} />
-      <Dropdown name="milestone" values={milestones} />
-      <Dropdown name="assignee" values={users} />
+      <div ref={domNode}>
+        <button type="button" onClick={onToggleDropdown}>
+          {name}
+        </button>
+        {isVisible && (
+          <ChoiceList
+            name={name}
+            values={values}
+            reloadIssue={reloadIssue}
+            onToggleDropdown={onToggleDropdown}
+            setResetQuery={setResetQuery}
+          />
+        )}
+      </div>
+    </>
+  );
+};
+
+const Alma = ({ users, labels, milestones, reloadIssue, setResetQuery }) => {
+  return (
+    <>
+      <Dropdown name="author" values={users} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <Dropdown name="label" values={labels} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <Dropdown name="milestone" values={milestones} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <Dropdown name="assignee" values={users} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
     </>
   );
 };
@@ -176,16 +292,12 @@ const IssueListItem = ({
   );
 };
 
-const IssueList = ({ issues, users, labels, milestones }) => {
+const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
   const [checkedIssues, setCheckedIssues] = useState([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [allChecked, setAllChecked] = useState(false);
   const [isMarkAs, setIsMarkAs] = useState(false);
-
-  // 콘솔에 선택된 이슈 디버깅 용도입니다. 이후 삭제해도 무방합니다.
-  useEffect(() => {
-    console.log(checkedIssues);
-  }, [JSON.stringify(checkedIssues)]);
+  const [resetQuery, setResetQuery] = useState(window.location.search !== '');
 
   useEffect(() => {
     if (checkedIssues.length === 0) {
@@ -212,11 +324,31 @@ const IssueList = ({ issues, users, labels, milestones }) => {
     }
   };
 
+  const onClickReset = () => {
+    setResetQuery(false);
+    window.history.pushState({}, '', `/issues`);
+    reloadIssue();
+  };
+
   return (
     <div>
+      <TopFilter reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      {resetQuery && (
+        <button type="button" onClick={onClickReset}>
+          Clear current search query, filters, and sorts
+        </button>
+      )}
       <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-      {isMarkAs && <MarkAs />}
-      {!isMarkAs && <Alma users={users} labels={labels} milestones={milestones} />}
+      {isMarkAs && <MarkAs reloadIssue={reloadIssue} checkedIssues={checkedIssues} setIsMarkAs={setIsMarkAs} />}
+      {!isMarkAs && (
+        <Alma
+          reloadIssue={reloadIssue}
+          users={users}
+          labels={labels}
+          milestones={milestones}
+          setResetQuery={setResetQuery}
+        />
+      )}
       {issues.map((issue) => (
         <IssueListItem
           key={issue.id}

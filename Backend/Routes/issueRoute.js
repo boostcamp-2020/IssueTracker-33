@@ -3,7 +3,7 @@ const { db } = require('../Models/dbPool');
 
 router.get('/', async (req, res) => {
   try {
-    const { open, author, milestone, label, assignee } = req.query;
+    const { open, author, milestone, label, assignee, mentions } = req.query;
 
     const innerFilterCondition = [];
     const filterValues = [];
@@ -25,22 +25,28 @@ router.get('/', async (req, res) => {
     }
 
     const whereClause = innerFilterCondition.length ? `WHERE ${innerFilterCondition.join(' AND ')}` : '';
-    let baseQuery = `SELECT id, A.userId, title, milestoneId, isOpen, createdAt, openCloseAt
-    FROM (SELECT * FROM issues ${whereClause}) AS A`;
+    let baseQuery = `SELECT DISTINCT ISS.id, ISS.userId, ISS.title, ISS.milestoneId, ISS.isOpen, ISS.createdAt, ISS.openCloseAt
+                     FROM (SELECT * FROM issues ${whereClause}) AS ISS`;
 
-    if (label || assignee) {
+    if (label || assignee || mentions) {
       let joinClause = ' ';
       let joinWhereClause = ' WHERE ';
       if (label) {
-        joinClause += ' inner join labelIssue on A.id = labelIssue.issueId ';
+        joinClause += ' inner join labelIssue on ISS.id = labelIssue.issueId ';
         joinWhereClause += ' labelIssue.labelId = ? ';
         filterValues.push(label);
       }
       if (assignee) {
-        joinClause += ' inner join assignees on A.id = assignees.issueId ';
+        joinClause += ' inner join assignees on ISS.id = assignees.issueId ';
         joinWhereClause += label ? ' AND ' : '';
         joinWhereClause += ' assignees.userId = ? ';
         filterValues.push(assignee);
+      }
+      if (mentions) {
+        joinClause += ' inner join comments on ISS.id = comments.issueId ';
+        joinWhereClause += label || assignee ? ' AND ' : '';
+        joinWhereClause += ' comments.userId = ? ';
+        filterValues.push(mentions);
       }
       baseQuery += joinClause + joinWhereClause;
     }
@@ -104,6 +110,8 @@ router.post('/', async (req, res) => {
   } catch {
     console.log('error');
     await conn.rollback();
+  } finally {
+    await conn.release();
   }
 });
 
@@ -135,6 +143,18 @@ router.get('/:issueId/comments', async (req, res) => {
   }
 });
 
+router.patch('/:issueId/status', async (req, res) => {
+  try {
+    const { issueId } = req.params;
+    const { isOpen } = req.body;
+    const [{ affectedRows }] = await db.execute('UPDATE issues SET isOpen = ? WHERE id = ?', [isOpen, issueId]);
+    if (affectedRows !== 1) res.status(404).end();
+    else res.status(204).end();
+  } catch (err) {
+    res.status(400).end();
+  }
+});
+
 router.patch('/:issueId/title', async (req, res) => {
   const { title } = req.body;
   const { issueId } = req.params;
@@ -143,6 +163,32 @@ router.patch('/:issueId/title', async (req, res) => {
     res.status(200).json({ result });
   } catch (err) {
     res.status(400).end();
+  }
+});
+
+router.patch('/status', async (req, res) => {
+  let conn = null;
+  const { issues, isOpen } = req.body;
+  try {
+    conn = await db.getConnection();
+
+    await conn.beginTransaction();
+    const querys = issues.map((issueId) => {
+      return conn.execute('UPDATE issues SET isOpen = ? WHERE id = ?', [isOpen, issueId]);
+    });
+
+    const isFailure = (await Promise.all(querys)).some(([{ affectedRows }]) => affectedRows !== 1);
+    if (isFailure) {
+      await conn.rollback();
+      return res.status(404).end();
+    }
+    await conn.commit();
+    res.status(204).end();
+  } catch (err) {
+    if (conn) await conn.rollback();
+    res.status(400).end();
+  } finally {
+    if (conn) await conn.release();
   }
 });
 

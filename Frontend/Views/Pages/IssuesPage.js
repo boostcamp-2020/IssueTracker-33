@@ -12,6 +12,11 @@ const toKeyValueMap = (records) => {
 
 const IssuesPage = () => {
   const [data, setData] = useState({ issueData: [], userData: [], labelData: [], mileData: [] });
+  const [issueReload, setIssueReload] = useState(true);
+
+  const reloadIssue = () => {
+    setIssueReload(!issueReload);
+  };
 
   useEffect(async () => {
     const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
@@ -42,11 +47,17 @@ const IssuesPage = () => {
     } catch (err) {
       window.location.href = 'http://localhost:8000';
     }
-  }, []);
+  }, [issueReload]);
 
   return (
     <div>
-      <IssueList issues={data.issueData} users={data.userData} labels={data.labelData} milestones={data.mileData} />
+      <IssueList
+        issues={data.issueData}
+        users={data.userData}
+        labels={data.labelData}
+        milestones={data.mileData}
+        reloadIssue={reloadIssue}
+      />
     </div>
   );
 };
