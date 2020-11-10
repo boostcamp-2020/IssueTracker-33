@@ -155,6 +155,17 @@ router.patch('/:issueId/status', async (req, res) => {
   }
 });
 
+router.patch('/:issueId/title', async (req, res) => {
+  const { title } = req.body;
+  const { issueId } = req.params;
+  try {
+    const [result] = await db.execute('UPDATE issues SET title = ? WHERE id = ?', [title, issueId]);
+    res.status(200).json({ result });
+  } catch (err) {
+    res.status(400).end();
+  }
+});
+
 router.patch('/status', async (req, res) => {
   let conn = null;
   const { issues, isOpen } = req.body;
@@ -178,6 +189,63 @@ router.patch('/status', async (req, res) => {
     res.status(400).end();
   } finally {
     if (conn) await conn.release();
+  }
+});
+
+router.patch('/:issueId/milestone', async (req, res) => {
+  const { milestone } = req.body;
+  const { issueId } = req.params;
+  try {
+    const [result] = await db.execute('UPDATE issues SET milestone = ? WHERE id = ?', [milestone, issueId]);
+    res.status(200).json({ result });
+  } catch (err) {
+    res.status(400).end();
+  }
+});
+
+router.patch('/:issueId/labels', async (req, res) => {
+  const { labels } = req.body;
+  const { issueId } = req.params;
+
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    await conn.execute('DELETE FROM labelIssue WHERE issueId = ?', [issueId]);
+    await labels.reduce(async (lastPromise, label) => {
+      await lastPromise;
+      const labelQuery = `INSERT INTO labelIssue(labelId, issueId) VALUES(${label}, ${issueId})`;
+      await conn.query(labelQuery);
+    }, Promise.resolve());
+    await conn.commit();
+    res.status(200).json({ result: true });
+  } catch (err) {
+    await conn.rollback();
+    res.status(400).end();
+  } finally {
+    conn.release();
+  }
+});
+
+router.patch('/:issueId/assignees', async (req, res) => {
+  const { assignees } = req.body;
+  const { issueId } = req.params;
+
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    await conn.execute('DELETE FROM assignees WHERE issueId = ?', [issueId]);
+    await assignees.reduce(async (lastPromise, assignee) => {
+      await lastPromise;
+      const assigneeQuery = `INSERT INTO assignees(assigneeId, issueId) VALUES(${assignee}, ${issueId})`;
+      await conn.query(assigneeQuery);
+    }, Promise.resolve());
+    await conn.commit();
+    res.status(200).json({ result: true });
+  } catch (err) {
+    await conn.rollback();
+    res.status(400).end();
+  } finally {
+    conn.release();
   }
 });
 

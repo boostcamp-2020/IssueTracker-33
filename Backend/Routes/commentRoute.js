@@ -7,17 +7,19 @@ router.post('/', async (req, res) => {
   try {
     await conn.beginTransaction();
     const commentValues = [userId, issueId, description];
-    const [result] = await db.execute(
+    const [result] = await conn.execute(
       'INSERT INTO comments(userId, issueId, description) VALUES(?, ?, ?)',
       commentValues,
     );
     const { insertId } = result;
-    const [comment] = await db.execute('SELECT * FROM comments WHERE id = ? ORDER BY createdAt ASC', [insertId]);
+    const [comment] = await conn.execute('SELECT * FROM comments WHERE id = ?', [insertId]);
     await conn.commit();
     res.status(200).json({ comment });
   } catch (err) {
     await conn.rollback();
     res.status(400).end();
+  } finally {
+    conn.release();
   }
 });
 

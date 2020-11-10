@@ -7,6 +7,7 @@ import IssueDetailPage from './Pages/IssueDetailPage';
 import LoginPage from './Pages/LoginPage';
 import LabelPage from './Pages/LabelPage';
 import MilestonPage from './Pages/MilestonePage';
+import NewMilestonePage from './Pages/NewMilestonePage';
 
 const App = () => {
   return (
@@ -17,7 +18,10 @@ const App = () => {
         <Route exact path="/issues/new" component={NewIssuePage} />
         <Route exact path="/issues/:issueId" component={IssueDetailPage} />
       </Switch>
-      <Route exact path="/milestones" component={MilestonPage} />
+      <Switch>
+        <Route exact path="/milestones" component={MilestonPage} />
+        <Route exact path="/milestones/new" component={NewMilestonePage} />
+      </Switch>
       <Route exact path="/labels" component={LabelPage} />
     </Router>
   );
