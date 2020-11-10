@@ -324,7 +324,6 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
     }
   };
 
-  // TODO: 최초 진입이 쿼리스트링일 때는 resetQuery가 true여야 함.
   const onClickReset = () => {
     setResetQuery(false);
     window.history.pushState({}, '', `/issues`);
