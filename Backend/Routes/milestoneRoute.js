@@ -6,21 +6,26 @@ router.patch('/:milestoneId', async (req, res) => {
   const { milestoneId } = req.params;
 
   const setClause = [];
+  const values = [];
   if (title) {
-    setClause.push(`title='${title}'`);
+    setClause.push(`title=?`);
+    values.push(title);
   }
   if (dueDate) {
-    setClause.push(`dueDate='${dueDate}'`);
+    setClause.push(`dueDate=?`);
+    values.push(dueDate);
   }
   if (description) {
-    setClause.push(`description='${description}'`);
+    setClause.push(`description=?`);
+    values.push(description);
   }
   if (isOpen !== undefined) {
-    setClause.push(`isOpen='${isOpen}'`);
+    setClause.push(`isOpen=?`);
+    values.push(isOpen);
   }
-
-  const query = `UPDATE milestones SET ${setClause.join(',')} WHERE id='${milestoneId}'`;
-  await db.execute(query);
+  values.push(milestoneId);
+  const query = `UPDATE milestones SET ${setClause.join(',')} WHERE id=?`;
+  await db.execute(query, values);
   res.json({});
 });
 
