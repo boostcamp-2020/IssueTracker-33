@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import MarkdownRender from './MarkdownRender';
 import ErrorMessage from './ErrorMessage';
 
 const CommentForm = ({
@@ -124,6 +125,7 @@ const CommentForm = ({
       <button type="submit" onClick={onSubmitComment} disabled={submitDisabled}>
         {isEdit ? 'Update comment' : 'Comment'}
       </button>
+      <MarkdownRender comment={comment} />
     </>
   );
 };
