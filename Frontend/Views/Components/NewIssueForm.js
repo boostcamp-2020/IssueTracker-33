@@ -19,7 +19,7 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
   }, [title, comment]);
 
   const pushIssue = async () => {
-    const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
+    const ISSUE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/issues`;
     const postData = {
       title,
       comment,
@@ -30,9 +30,9 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
     };
     try {
       await axios.post(ISSUE_URL, postData, { withCredentials: true });
-      window.location.href = 'http://localhost:8000/issues';
+      window.location.href = `${process.env.WEB_URL}/issues`;
     } catch (err) {
-      window.location.href = 'http://localhost:8000';
+      window.location.href = process.env.WEB_URL;
     }
   };
 
@@ -70,7 +70,7 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
       const datas = new FormData();
       datas.append('image', image, image.name);
       try {
-        const result = await axios.post('http://localhost:3000/api/v1/images', datas, {
+        const result = await axios.post(`${process.env.API_URL}/${process.env.API_VERSION}/images`, datas, {
           'Content-Type': 'multipart/form-data',
           withCredentials: true,
         });

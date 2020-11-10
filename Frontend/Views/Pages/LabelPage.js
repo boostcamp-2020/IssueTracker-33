@@ -9,7 +9,9 @@ const LabelPage = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(async () => {
-    const { data } = await axios.get('http://localhost:3000/api/v1/labels', { withCredentials: true });
+    const { data } = await axios.get(`${process.env.API_URL}/${process.env.API_VERSION}/labels`, {
+      withCredentials: true,
+    });
     setLabels(data);
   }, []);
 

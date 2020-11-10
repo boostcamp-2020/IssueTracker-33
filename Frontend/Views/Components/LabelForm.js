@@ -51,7 +51,7 @@ const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit })
   };
 
   const onClickCreate = async () => {
-    const LABEL_URL = 'http://localhost:3000/api/v1/labels';
+    const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
     const postData = {
       name,
       description,
@@ -67,7 +67,7 @@ const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit })
   };
 
   const onClickEdit = async () => {
-    const LABEL_URL = 'http://localhost:3000/api/v1/labels';
+    const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
     const postData = {
       id: labelToEdit.id,
       name,

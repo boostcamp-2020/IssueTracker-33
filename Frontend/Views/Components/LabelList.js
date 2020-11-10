@@ -4,7 +4,7 @@ import LabelForm from './LabelForm';
 
 const LabelList = ({ labels, setLabels, setIsFormVisible }) => {
   const onClickDelete = async (id) => {
-    const LABEL_URL = 'http://localhost:3000/api/v1/labels';
+    const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
     try {
       await axios.delete(`${LABEL_URL}/${id}`, { withCredentials: true });
       setLabels(labels.filter((label) => label.id !== id));

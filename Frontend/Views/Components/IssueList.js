@@ -68,7 +68,7 @@ const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs }) => {
     const onChangeStatus = async (status) => {
       try {
         await axios.patch(
-          'http://localhost:3000/api/v1/issues/status',
+          `${process.env.API_URL}/${process.env.API_VERSION}/issues/status`,
           {
             issues: checkedIssues,
             isOpen: status,

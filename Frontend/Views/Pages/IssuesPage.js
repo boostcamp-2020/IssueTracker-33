@@ -19,10 +19,10 @@ const IssuesPage = () => {
   };
 
   useEffect(async () => {
-    const ISSUE_URL = 'http://localhost:3000/api/v1/issues';
-    const USER_URL = 'http://localhost:3000/api/v1/users';
-    const LABEL_URL = 'http://localhost:3000/api/v1/labels';
-    const MILE_URL = 'http://localhost:3000/api/v1/milestones';
+    const ISSUE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/issues`;
+    const USER_URL = `${process.env.API_URL}/${process.env.API_VERSION}/users`;
+    const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
+    const MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones`;
 
     const queryString = window.location.search;
     const issueProm = axios.get(`${ISSUE_URL}${queryString}`, { withCredentials: true });
@@ -45,7 +45,7 @@ const IssuesPage = () => {
         mileData: toKeyValueMap(milesResolve.data),
       });
     } catch (err) {
-      window.location.href = 'http://localhost:8000';
+      window.location.href = process.env.WEB_URL;
     }
   }, [issueReload]);
 

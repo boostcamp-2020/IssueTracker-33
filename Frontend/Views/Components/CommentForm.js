@@ -26,7 +26,7 @@ const CommentForm = ({
   const postComment = async () => {
     try {
       return await axios.post(
-        'http://localhost:3000/api/v1/comments',
+        `${process.env.API_URL}/${process.env.API_VERSION}/comments`,
         {
           description: comment,
           userId: 1,
@@ -43,7 +43,7 @@ const CommentForm = ({
   const patchComment = async () => {
     try {
       return await axios.patch(
-        `http://localhost:3000/api/v1/comments/${commentId}`,
+        `${process.env.API_URL}/${process.env.API_VERSION}/comments/${commentId}`,
         {
           description: comment,
         },
@@ -92,7 +92,7 @@ const CommentForm = ({
       try {
         const result = await axios({
           method: 'post',
-          url: 'http://localhost:3000/api/v1/images',
+          url: `${process.env.API_URL}/${process.env.API_VERSION}/images`,
           data: datas,
           headers: { 'Content-Type': 'multipart/form-data' },
         });

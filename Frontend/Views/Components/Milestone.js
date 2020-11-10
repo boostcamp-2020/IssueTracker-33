@@ -5,7 +5,7 @@ import MilestoneEditor from './MilestoneEditor';
 const Milestone = ({ milestone }) => {
   const [isEditButtonClicked, setIsEditButtoneClicked] = useState(false);
 
-  const MILE_URL = `http://localhost:3000/api/v1/milestones/${milestone.id}`;
+  const MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones/${milestone.id}`;
 
   const box = {
     border: '1px solid',
@@ -23,9 +23,9 @@ const Milestone = ({ milestone }) => {
     const value = milestone.mileIsOpen ? 0 : 1;
     try {
       await axios.patch(MILE_URL, { isOpen: value }, { withCredentials: true });
-      window.location.href = 'http://localhost:8000/milestones';
+      window.location.href = `${process.env.WEB_URL}/milestones`;
     } catch (err) {
-      window.location.href = 'http://localhost:8000';
+      window.location.href = process.env.WEB_URL;
     }
   };
 
@@ -35,9 +35,9 @@ const Milestone = ({ milestone }) => {
   const onDeleteBtn = async () => {
     try {
       await axios.delete(MILE_URL, { withCredentials: true });
-      window.location.href = 'http://localhost:8000/milestones';
+      window.location.href = `${process.env.WEB_URL}/milestones`;
     } catch (err) {
-      window.location.href = 'http://localhost:8000';
+      window.location.href = process.env.WEB_URL;
     }
   };
 
