@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -13,7 +14,9 @@ module.exports = {
       },
     ],
   },
-
+  resolve: {
+    fallback: { path: require.resolve('path-browserify') },
+  },
   output: {
     filename: 'main.js',
     path: path.join(__dirname, 'dist'),
@@ -29,6 +32,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'Views/index.html',
       inject: false,
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
     }),
   ],
 };
