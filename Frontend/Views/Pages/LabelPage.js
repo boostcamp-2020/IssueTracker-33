@@ -10,7 +10,7 @@ const LabelPage = () => {
   useEffect(async () => {
     const { data } = await axios.get('http://localhost:3000/api/v1/labels', { withCredentials: true });
     setLabels(data);
-  });
+  }, []);
 
   const onToggleForm = () => {
     setIsFormVisible(!isFormVisible);
@@ -25,8 +25,8 @@ const LabelPage = () => {
           New Label
         </button>
       </div>
-      {isFormVisible && <LabelForm />}
-      <LabelList labels={labels} />
+      {isFormVisible && <LabelForm setIsFormVisible={setIsFormVisible} labels={labels} setLabels={setLabels} />}
+      <LabelList labels={labels} setLabels={setLabels} setIsFormVisible={setIsFormVisible} />
     </>
   );
 };
