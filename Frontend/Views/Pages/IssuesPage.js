@@ -15,7 +15,7 @@ const IssuesPage = () => {
   const [issueReload, setIssueReload] = useState(true);
 
   const reloadIssue = () => {
-    setIssueReload(!issueReload);
+    setIssueReload((prevIssueReload) => !prevIssueReload);
   };
 
   useEffect(async () => {
@@ -48,6 +48,12 @@ const IssuesPage = () => {
       window.location.href = 'http://localhost:8000';
     }
   }, [issueReload]);
+
+  useEffect(() => {
+    const reloadWhenPopstate = () => reloadIssue();
+    window.addEventListener('popstate', reloadWhenPopstate);
+    return () => window.removeEventListener('popstate', reloadWhenPopstate);
+  }, []);
 
   return (
     <div>

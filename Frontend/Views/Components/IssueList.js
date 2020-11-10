@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import useClickOutside from './Modal';
 
@@ -10,7 +11,7 @@ const getUserId = (cookie) => {
 
 const TopFilter = ({ reloadIssue, setResetQuery }) => {
   const [isVisible, setIsVisible] = useState(false);
-
+  const history = useHistory();
   const domNode = useClickOutside(() => {
     setIsVisible(false);
   });
@@ -20,7 +21,7 @@ const TopFilter = ({ reloadIssue, setResetQuery }) => {
   };
 
   const onClickFilter = (queryString) => {
-    window.history.pushState({}, '', `/issues?${queryString}`);
+    history.push(`/issues?${queryString}`);
     onToggleDropdown();
     setResetQuery(true);
     reloadIssue();
@@ -149,6 +150,8 @@ const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery
       ItemComponent = null;
   }
 
+  const history = useHistory();
+
   const onSelectAlmaItem = (id) => {
     const oldQueryString = window.location.search;
 
@@ -168,7 +171,8 @@ const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery
     const newQueryString = Object.keys(newQuery).reduce((acc, key) => {
       return `${acc}${acc === '' ? '' : '&'}${key}=${newQuery[key]}`;
     }, '');
-    window.history.pushState({}, '', `/issues?${newQueryString}`);
+
+    history.push(`/issues?${newQueryString}`);
     onToggleDropdown();
     setResetQuery(true);
     reloadIssue();
@@ -299,6 +303,8 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
   const [isMarkAs, setIsMarkAs] = useState(false);
   const [resetQuery, setResetQuery] = useState(window.location.search !== '');
 
+  const history = useHistory();
+
   useEffect(() => {
     if (checkedIssues.length === 0) {
       setAllChecked(false);
@@ -326,7 +332,7 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
 
   const onClickReset = () => {
     setResetQuery(false);
-    window.history.pushState({}, '', `/issues`);
+    history.push('/issues');
     reloadIssue();
   };
 
