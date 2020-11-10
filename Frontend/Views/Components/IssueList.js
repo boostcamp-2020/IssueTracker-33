@@ -53,7 +53,7 @@ const TopFilter = ({ reloadIssue, setResetQuery }) => {
   );
 };
 
-const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs }) => {
+const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs, setAllChecked }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -77,6 +77,7 @@ const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs }) => {
         );
         onToggleDropdown();
         setIsMarkAs(false);
+        setAllChecked(false);
         reloadIssue();
       } catch (err) {
         console.log('error');
@@ -245,7 +246,8 @@ const IssueListItem = ({
   checkedIssues,
   isCheckAll,
   setAllChecked,
-  allCheckValue,
+  allChecked,
+  isMarkAs,
 }) => {
   const [isChecked, setIsChecked] = useState(false);
 
@@ -254,10 +256,16 @@ const IssueListItem = ({
   }, [isCheckAll]);
 
   useEffect(() => {
-    if (allCheckValue) {
-      setIsChecked(allCheckValue);
+    if (allChecked) {
+      setIsChecked(allChecked);
     }
-  }, [allCheckValue]);
+  }, [allChecked]);
+
+  useEffect(() => {
+    if (!isMarkAs) {
+      setIsChecked(false);
+    }
+  }, [isMarkAs]);
 
   const onCheckIssue = () => {
     if (isChecked === false) {
@@ -345,7 +353,14 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
         </button>
       )}
       <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-      {isMarkAs && <MarkAs reloadIssue={reloadIssue} checkedIssues={checkedIssues} setIsMarkAs={setIsMarkAs} />}
+      {isMarkAs && (
+        <MarkAs
+          reloadIssue={reloadIssue}
+          checkedIssues={checkedIssues}
+          setIsMarkAs={setIsMarkAs}
+          setAllChecked={setAllChecked}
+        />
+      )}
       {!isMarkAs && (
         <Alma
           reloadIssue={reloadIssue}
@@ -367,7 +382,8 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
           checkedIssues={checkedIssues}
           isCheckAll={isCheckAll}
           setAllChecked={setAllChecked}
-          allCheckValue={allChecked}
+          allChecked={allChecked}
+          isMarkAs={isMarkAs}
         />
       ))}
     </div>
