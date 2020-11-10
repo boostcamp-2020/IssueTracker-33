@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 const Milestone = ({ milestone }) => {
-  const MILE_URL = `http://localhost:3000/api/v1/milestones/:${milestone.id}`;
+  const MILE_URL = `http://localhost:3000/api/v1/milestones/${milestone.id}`;
 
   const box = {
     border: '1px solid',

@@ -19,7 +19,7 @@ router.patch('/:milestoneId', async (req, res) => {
     setClause.push(`isOpen='${isOpen}'`);
   }
 
-  const query = `UPDATE milestones SET ${setClause.join(',')} WHERE id='${milestoneId[1]}'`;
+  const query = `UPDATE milestones SET ${setClause.join(',')} WHERE id='${milestoneId}'`;
   await db.execute(query);
   res.json({});
 });
