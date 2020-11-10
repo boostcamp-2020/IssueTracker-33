@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import MarkdownRender from './MarkdownRender';
 import ErrorMessage from './ErrorMessage';
 
 const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData }) => {
+  const history = useHistory();
+
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
   const [titleError, setTitleError] = useState(false);
@@ -49,6 +53,7 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
     }
     e.preventDefault();
     pushIssue();
+    history.push('/issues');
   };
 
   const onChangeTitle = (e) => {
@@ -77,6 +82,10 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
     }
   };
 
+  const onClickCancel = () => {
+    history.push('/issues');
+  };
+
   return (
     <>
       <input type="text" placeholder="Title" onChange={onChangeTitle} />
@@ -90,10 +99,13 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
       />
       {commentError && <ErrorMessage message="본문을 입력해주세요." />}
       {imageError && <ErrorMessage message="이미지 업로드에 실패했습니다." />}
-      <button type="button">Cancel</button>
+      <button type="button" onClick={onClickCancel}>
+        Cancel
+      </button>
       <button type="submit" onClick={onSubmitIssue} disabled={submitDisabled}>
         Submit new issue
       </button>
+      <MarkdownRender comment={comment} />
     </>
   );
 };
