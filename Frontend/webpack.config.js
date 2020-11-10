@@ -5,7 +5,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env, options) => {
   const envList = dotenv.config({ path: `./${options.mode || 'development'}.env` }).parsed;
-  console.log(envList);
 
   return {
     entry: ['@babel/polyfill', './Views/index.js'],
@@ -45,7 +44,6 @@ module.exports = (env, options) => {
         'process.env.API_VERSION': JSON.stringify(process.env.API_VERSION),
         'process.env.WEB_URL': JSON.stringify(process.env.WEB_URL),
       }),
-      new webpack.EnvironmentPlugin(['API_URL', 'WEB_URL', 'API_VERSION']),
     ],
   };
 };
