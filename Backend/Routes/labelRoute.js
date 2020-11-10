@@ -13,8 +13,10 @@ router.post('', async (req, res) => {
   const labelValues = [name, description, color];
   const query = `INSERT INTO labels(name, description, color) VALUES(?, ?, ?)`;
   try {
-    await db.execute(query, labelValues);
-    res.status(200).end();
+    const [result] = await db.execute(query, labelValues);
+    const { insertId } = result;
+    console.log(insertId);
+    res.status(200).json({ insertId });
   } catch (err) {
     res.status(400).end();
   }
