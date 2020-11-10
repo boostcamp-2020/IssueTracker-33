@@ -58,8 +58,9 @@ const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit })
       color,
     };
     try {
-      await axios.post(LABEL_URL, postData, { withCredentials: true });
-      setLabels([...labels, postData]);
+      // TODO: 넣은 행에 대한 InsertId 받아오기
+      const { data } = await axios.post(LABEL_URL, postData, { withCredentials: true });
+      setLabels([...labels, { ...postData, id: data.insertId }]);
     } catch (err) {
       console.log(err.message);
     }

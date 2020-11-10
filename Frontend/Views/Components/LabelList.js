@@ -17,7 +17,7 @@ const LabelList = ({ labels, setLabels, setIsFormVisible }) => {
     const [isEdit, setIsEdit] = useState(false);
     return (
       <>
-        <div key={label.id}>
+        <div>
           <span color={label.color}>{label.name}</span>
           <span>{label.description}</span>
           <button type="button" onClick={() => setIsEdit(!isEdit)}>
@@ -45,7 +45,7 @@ const LabelList = ({ labels, setLabels, setIsFormVisible }) => {
       <div>{`${labels.length} labels`}</div>
       {labels.map((label) => (
         <>
-          <LabelItem label={label} />
+          <LabelItem key={label.id} label={label} />
         </>
       ))}
     </>
