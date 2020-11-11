@@ -21,8 +21,9 @@ const commentUpdate = (req, res, next) => {
 };
 
 const commentCreate = (req, res, next) => {
-  const { userId, issueId, description } = req.body;
-  if (checkUndefined(userId, issueId, description)) {
+  const { id } = req.user;
+  const { issueId, description } = req.body;
+  if (checkUndefined(id, issueId, description)) {
     return res.status(400).json({ message: 'Bad Parameters' });
   }
   return next();

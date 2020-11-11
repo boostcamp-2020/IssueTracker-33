@@ -1,7 +1,8 @@
 const { updateCommentById, createCommentAndGetIt } = require('../Services/commentService');
 
 const postComment = async (req, res, next) => {
-  const { userId, issueId, description } = req.body;
+  const { id: userId } = req.user;
+  const { issueId, description } = req.body;
   try {
     const comment = await createCommentAndGetIt({ userId, issueId, description });
     if (comment === false) return res.status(500).json({ message: 'Internal Error' });
