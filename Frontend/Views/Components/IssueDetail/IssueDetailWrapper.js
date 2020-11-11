@@ -18,7 +18,7 @@ const IssueDetailWrapper = ({ issueId }) => {
         withCredentials: true,
       });
     } catch (err) {
-      console.err(err);
+      console.err(err.message);
     }
   };
 
@@ -28,7 +28,7 @@ const IssueDetailWrapper = ({ issueId }) => {
         withCredentials: true,
       });
     } catch (err) {
-      console.err(err);
+      console.err(err.message);
     }
   };
 
@@ -36,7 +36,11 @@ const IssueDetailWrapper = ({ issueId }) => {
     const result = await getIssue();
     setUserSelectedData([...result.data.assignees]);
     setLabelSelectedData([...result.data.labels]);
-    setMileSelectedData([result.data.issue.milestoneId]);
+    if (result.data.issue.milestoneId === null) {
+      setMileSelectedData([]);
+    } else {
+      setMileSelectedData([result.data.issue.milestoneId]);
+    }
     setIssueData(result.data.issue);
   };
 
@@ -50,7 +54,7 @@ const IssueDetailWrapper = ({ issueId }) => {
       await readIssue();
       await readComments();
     } catch (err) {
-      console.err(err);
+      console.log(err);
     }
   }, []);
 
