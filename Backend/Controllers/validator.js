@@ -12,4 +12,20 @@ const label = (req, res, next) => {
   return next();
 };
 
-module.exports = { label };
+const commentUpdate = (req, res, next) => {
+  const { description } = req.body;
+  if (checkUndefined(description)) {
+    return res.status(400).json({ message: 'Bad Parameters' });
+  }
+  return next();
+};
+
+const commentCreate = (req, res, next) => {
+  const { userId, issueId, description } = req.body;
+  if (checkUndefined(userId, issueId, description)) {
+    return res.status(400).json({ message: 'Bad Parameters' });
+  }
+  return next();
+};
+
+module.exports = { label, commentCreate, commentUpdate };
