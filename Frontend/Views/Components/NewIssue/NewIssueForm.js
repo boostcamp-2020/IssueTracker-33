@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import MarkdownRender from '../MarkdownRender';
 import ErrorMessage from '../ErrorMessage';
-import getUserId from '../../../Sources/user';
+import { getUserId, getUserImageLink } from '../../../Sources/user';
+import UserPhotoBlock from '../UserPhotoBlock';
 
 const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData }) => {
   const history = useHistory();
@@ -24,8 +25,6 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
     const postData = {
       title,
       comment,
-      userId: getUserId(document.cookie),
-      // userId: 1,
       milestoneId: mileSelectedData.map((elem) => elem.id)[0],
       labels: labelSelectedData.map((elem) => elem.id),
       assignees: userSelectedData.map((elem) => elem.id),
@@ -90,6 +89,7 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
 
   return (
     <>
+      <UserPhotoBlock imageLink={getUserImageLink(document.cookie)} />
       <input type="text" placeholder="Title" onChange={onChangeTitle} />
       {titleError && <ErrorMessage message="제목을 입력해주세요." />}
       <textarea type="text" placeholder="Leave a comment" onChange={onChangeComment} value={comment} />

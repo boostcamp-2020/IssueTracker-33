@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const IssueListItem = ({
   issue,
@@ -14,6 +15,8 @@ const IssueListItem = ({
   isMarkAs,
 }) => {
   const [isChecked, setIsChecked] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     setIsChecked(isCheckAll);
@@ -42,12 +45,16 @@ const IssueListItem = ({
     }
   };
 
+  const onClickTitle = (id) => {
+    history.push(`/issues/${id}`);
+  };
+
   return (
     <div>
       <br />
       <div>
         <input key={issue.id} checked={isChecked} type="checkbox" onChange={onCheckIssue} />
-        <span>{issue.title}</span>
+        <span onClick={() => onClickTitle(issue.id)}>{issue.title}</span>
         <span>
           {labels.map((label) => (
             <span key={label.id}>{` ${label.name}`}</span>
