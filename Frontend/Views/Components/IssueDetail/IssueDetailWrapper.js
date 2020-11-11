@@ -10,6 +10,7 @@ const IssueDetailWrapper = ({ issueId }) => {
   const [labelSelectedData, setLabelSelectedData] = useState([]);
   const [mileSelectedData, setMileSelectedData] = useState([]);
   const [issueData, setIssueData] = useState({});
+  const [isOpen, setIsOpen] = useState();
   const [commentsData, setCommentsData] = useState([]);
 
   const getIssue = async () => {
@@ -38,6 +39,7 @@ const IssueDetailWrapper = ({ issueId }) => {
     setLabelSelectedData([...result.data.labels]);
     setMileSelectedData([result.data.issue.milestoneId]);
     setIssueData(result.data.issue);
+    setIsOpen(result.data.issue.isOpen);
   };
 
   const readComments = async () => {
@@ -56,7 +58,7 @@ const IssueDetailWrapper = ({ issueId }) => {
 
   return (
     <>
-      <IssueDetailTitle issueData={issueData} />
+      <IssueDetailTitle issueData={issueData} isOpen={isOpen} />
       <CommentList commentsData={commentsData} owner={issueData.userId} />
       <NewIssueOption
         userSelectedData={userSelectedData}
@@ -66,7 +68,13 @@ const IssueDetailWrapper = ({ issueId }) => {
         setLabelSelectedData={setLabelSelectedData}
         setMileSelectedData={setMileSelectedData}
       />
-      <CommentForm issueId={issueId} commentsData={commentsData} setCommentsData={setCommentsData} />
+      <CommentForm
+        issueId={issueId}
+        commentsData={commentsData}
+        setCommentsData={setCommentsData}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
     </>
   );
 };

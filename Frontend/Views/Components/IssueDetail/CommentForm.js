@@ -7,6 +7,8 @@ const CommentForm = ({
   issueId,
   commentsData,
   setCommentsData,
+  isOpen,
+  setIsOpen,
   description,
   setDescription,
   setIsDescription,
@@ -29,7 +31,6 @@ const CommentForm = ({
         `${process.env.API_URL}/${process.env.API_VERSION}/comments`,
         {
           description: comment,
-          userId: 1,
           issueId,
         },
         { withCredentials: true },
@@ -54,16 +55,37 @@ const CommentForm = ({
     }
   };
 
+  const patchStatus = async (newStatus) => {
+    try {
+      return await axios.patch(
+        `http://localhost:3000/api/v1/issues/${issueId}/status`,
+        {
+          isOpen: newStatus,
+        },
+        { withCredentials: true },
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const createComment = async () => {
     const result = await postComment();
     const [newComment] = result.data.comment;
     setCommentsData([...commentsData, newComment]);
+    setComment('');
   };
 
   const editComment = async () => {
-    const result = await patchComment();
+    await patchComment();
     setDescription(comment);
     setIsDescription(true);
+  };
+
+  const editStatus = async () => {
+    const newStatus = isOpen ? 0 : 1;
+    await patchStatus(newStatus);
+    setIsOpen(newStatus);
   };
 
   const onSubmitComment = (e) => {
@@ -95,6 +117,7 @@ const CommentForm = ({
           url: `${process.env.API_URL}/${process.env.API_VERSION}/images`,
           data: datas,
           headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
         });
         setImageError(false);
         setComment(`${comment}\n![image](${result.data.imageLink})`);
@@ -105,7 +128,7 @@ const CommentForm = ({
   };
 
   const onClickCancel = () => {
-    if (isEdit) setIsDescription(true);
+    (isEdit ? setIsDescription : editStatus)(true);
   };
 
   return (
@@ -120,7 +143,7 @@ const CommentForm = ({
       {commentError && <ErrorMessage message="본문을 입력해주세요." />}
       {imageError && <ErrorMessage message="이미지 업로드에 실패했습니다." />}
       <button type="button" onClick={onClickCancel}>
-        {isEdit ? 'Cancel' : 'Close issue'}
+        {isEdit ? 'Cancel' : isOpen ? 'Close issue' : 'Reopen issue'}
       </button>
       <button type="submit" onClick={onSubmitComment} disabled={submitDisabled}>
         {isEdit ? 'Update comment' : 'Comment'}
