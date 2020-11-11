@@ -36,9 +36,7 @@ const IssueDetailWrapper = ({ issueId }) => {
     const result = await getIssue();
     setUserSelectedData([...result.data.assignees]);
     setLabelSelectedData([...result.data.labels]);
-    if (result.data.issue.milestoneId === null) {
-      setMileSelectedData([]);
-    } else {
+    if (result.data.issue.milestoneId !== null) {
       setMileSelectedData([result.data.issue.milestoneId]);
     }
     setIssueData(result.data.issue);

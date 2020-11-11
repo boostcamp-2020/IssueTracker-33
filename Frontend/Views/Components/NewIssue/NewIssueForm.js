@@ -25,7 +25,6 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
     const postData = {
       title,
       comment,
-      userId: getUserId(document.cookie),
       milestoneId: mileSelectedData.map((elem) => elem.id)[0],
       labels: labelSelectedData.map((elem) => elem.id),
       assignees: userSelectedData.map((elem) => elem.id),
