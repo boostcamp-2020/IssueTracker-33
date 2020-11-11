@@ -7,15 +7,7 @@ import { LabelsContext } from '../store/AppStore';
 
 const LabelPage = () => {
   const { labels } = useContext(LabelsContext);
-  // const [labels, setLabels] = useState([]);
   const [isFormVisible, setIsFormVisible] = useState(false);
-
-  // useEffect(async () => {
-  //   const { data } = await axios.get(`${process.env.API_URL}/${process.env.API_VERSION}/labels`, {
-  //     withCredentials: true,
-  //   });
-  //   setLabels(data);
-  // }, []);
 
   const onToggleForm = () => {
     setIsFormVisible(!isFormVisible);

@@ -17,7 +17,7 @@ const labelsReducer = (labels, { type, data, target }) => {
       return [...labels, data];
 
     case 'targetUpdate':
-      return labels.map((label) => {
+      return labels?.map((label) => {
         if (label.id === target) {
           return Object.assign(label, data);
         }

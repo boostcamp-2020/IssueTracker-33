@@ -1,48 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useContext } from 'react';
 import NewIssueDropdown from './NewIssue/NewIssueDropdown';
+import { UsersContext, LabelsContext, MilestonesContext } from '../store/AppStore';
 
-const NewIssueOption = ({
-  userSelectedData,
-  labelSelectedData,
-  mileSelectedData,
-  setUserSelectedData,
-  setLabelSelectedData,
-  setMileSelectedData,
-}) => {
-  const [userData, setUser] = useState('');
-  const [labelData, setLabel] = useState('');
-  const [mileData, setMile] = useState('');
-
-  useEffect(async () => {
-    const USER_URL = `${process.env.API_URL}/${process.env.API_VERSION}/users`;
-    const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
-    const MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones`;
-
-    const userProm = axios.get(USER_URL, { withCredentials: true });
-    const labelProm = axios.get(LABEL_URL, { withCredentials: true });
-    const mileProm = axios.get(MILE_URL, { withCredentials: true });
-
-    try {
-      const [userResolve, labelResolve, mileResolve] = await Promise.all([userProm, labelProm, mileProm]);
-      setUser(userResolve.data);
-      setLabel(labelResolve.data);
-      setMile(mileResolve.data);
-    } catch (err) {
-      window.location.href = process.env.WEB_URL;
-    }
-  }, []);
+const NewIssueOption = ({ selectedUsers, selecetdLabels, selectedMiles, setSelectedUsers, setSelectedLabels, setSelectedMiles }) => {
+  const { users } = useContext(UsersContext);
+  const { labels } = useContext(LabelsContext);
+  const { milestones } = useContext(MilestonesContext);
 
   return (
     <div>
-      <NewIssueDropdown dropdownTitle="Assignees" selected={userSelectedData} setSelected={setUserSelectedData}>
-        {userData}
+      <NewIssueDropdown dropdownTitle="Assignees" selected={selectedUsers} setSelected={setSelectedUsers}>
+        {users}
       </NewIssueDropdown>
-      <NewIssueDropdown dropdownTitle="Labels" selected={labelSelectedData} setSelected={setLabelSelectedData}>
-        {labelData}
+      <NewIssueDropdown dropdownTitle="Labels" selected={selecetdLabels} setSelected={setSelectedLabels}>
+        {labels}
       </NewIssueDropdown>
-      <NewIssueDropdown dropdownTitle="Milestones" selected={mileSelectedData} setSelected={setMileSelectedData}>
-        {mileData}
+      <NewIssueDropdown dropdownTitle="Milestones" selected={selectedMiles} setSelected={setSelectedMiles}>
+        {milestones}
       </NewIssueDropdown>
     </div>
   );

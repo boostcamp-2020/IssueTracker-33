@@ -16,7 +16,7 @@ const NewIssueDropdown = ({ dropdownTitle, selected, setSelected, children }) =>
       {isOpen && <NewIssueList setSelected={setSelected} selected={selected} data={[...children]} />}
 
       <div id={`${dropdownTitle} selected`}>
-        {selected.map((elem) => (
+        {selected?.map((elem) => (
           <span key={elem.id}>{elem.username || elem.name || elem.title}</span>
         ))}
       </div>
