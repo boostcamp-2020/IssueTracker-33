@@ -1,4 +1,5 @@
 const { getAllIssues, getIssueById } = require('../Services/issueService');
+const { getAllCommentsByIssueId } = require('../Services/commentService');
 
 const getIssues = async (req, res, next) => {
   try {
@@ -20,4 +21,14 @@ const getSpecifiedIssue = async (req, res, next) => {
   }
 };
 
-module.exports = { getIssues, getSpecifiedIssue };
+const getCommentsOfSpecifiedIssue = async (req, res) => {
+  const { issueId } = req.params;
+  try {
+    const comments = await getAllCommentsByIssueId(issueId);
+    return res.json({ comments });
+  } catch (err) {
+    return res.status(500).end();
+  }
+};
+
+module.exports = { getIssues, getSpecifiedIssue, getCommentsOfSpecifiedIssue };

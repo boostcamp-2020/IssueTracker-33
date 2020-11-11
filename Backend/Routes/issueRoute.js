@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const { db } = require('../Models/dbPool');
-const { getIssues, getSpecifiedIssue } = require('../Controllers/issueController');
+const { getIssues, getSpecifiedIssue, getCommentsOfSpecifiedIssue } = require('../Controllers/issueController');
 
 router.get('/', getIssues);
 
+// TODO: refactor
 router.post('/', async (req, res) => {
   const { title, userId, milestoneId, labels, assignees, comment } = req.body;
 
@@ -50,17 +51,7 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:issueId', getSpecifiedIssue);
-
-router.get('/:issueId/comments', async (req, res) => {
-  try {
-    const [comments] = await db.execute('SELECT * FROM comments WHERE issueId = ? ORDER BY createdAt ASC', [
-      req.params.issueId,
-    ]);
-    res.status(200).json({ comments });
-  } catch (err) {
-    res.status(400).end();
-  }
-});
+router.get('/:issueId/comments', getCommentsOfSpecifiedIssue);
 
 router.patch('/:issueId/status', async (req, res) => {
   try {
@@ -85,6 +76,7 @@ router.patch('/:issueId/title', async (req, res) => {
   }
 });
 
+// TODO: refactor
 router.patch('/status', async (req, res) => {
   let conn = null;
   const { issues, isOpen } = req.body;
@@ -122,6 +114,7 @@ router.patch('/:issueId/milestone', async (req, res) => {
   }
 });
 
+// TODO: refactor
 router.patch('/:issueId/labels', async (req, res) => {
   const { labels } = req.body;
   const { issueId } = req.params;
@@ -145,6 +138,7 @@ router.patch('/:issueId/labels', async (req, res) => {
   }
 });
 
+// TODO: refactor
 router.patch('/:issueId/assignees', async (req, res) => {
   const { assignees } = req.body;
   const { issueId } = req.params;

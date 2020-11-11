@@ -1,6 +1,11 @@
 const comment = require('../Models/commentModel');
 const { db } = require('../Models/dbPool');
 
+const getAllCommentsByIssueId = async (issueId) => {
+  const [comments] = await comment.getAllByIssueId(issueId);
+  return comments;
+};
+
 const createCommentAndGetIt = async ({ userId, issueId, description }) => {
   let conn;
   try {
@@ -24,4 +29,4 @@ const updateCommentById = async ({ description }, id) => {
   return result;
 };
 
-module.exports = { updateCommentById, createCommentAndGetIt };
+module.exports = { updateCommentById, createCommentAndGetIt, getAllCommentsByIssueId };

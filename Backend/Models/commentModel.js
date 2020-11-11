@@ -1,7 +1,13 @@
 const { db } = require('./dbPool');
 
+const getAllByIssueId = (issueId) => {
+  const query =
+    'SELECT id, userId, issueId, description, createdAt, updatedAt FROM comments WHERE issueId = ? ORDER BY createdAt ASC';
+  return db.execute(query, [issueId]);
+};
+
 const getById = (id, connection = db) => {
-  const query = 'SELECT * FROM comments WHERE id = ?';
+  const query = 'SELECT id, userId, issueId, description, createdAt, updatedAt FROM comments WHERE id = ?';
   return connection.execute(query, [id]);
 };
 
@@ -16,4 +22,4 @@ const updateById = ({ description }, id) => {
   return db.execute(query, [description, id]);
 };
 
-module.exports = { getById, create, updateById };
+module.exports = { getAllByIssueId, getById, create, updateById };

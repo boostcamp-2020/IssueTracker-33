@@ -2,6 +2,7 @@ const { db } = require('../Models/dbPool');
 const issueModel = require('../Models/issueModel');
 const assigneeModel = require('../Models/assigneeModel');
 const labelIssueModel = require('../Models/labelIssueModel');
+const commentModel = require('../Models/commentModel');
 
 // getAllIssues() use raw queries.
 const getAllIssues = async ({ open, author, milestone, label, assignee, mentions }) => {
