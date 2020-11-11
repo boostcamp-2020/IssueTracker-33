@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const MilestoneEditor = ({ milestone, setIsEditButtoneClicked }) => {
-  const [inputTitle, setTitle] = useState(milestone?.title || '');
-  const [inputDate, setDate] = useState(milestone?.dueDate.substring(0, 10) || '');
-  const [inputDescription, setDescription] = useState(milestone?.description || '');
+  const [inputTitle, setTitle] = useState(milestone?.title || null);
+  const [inputDate, setDate] = useState(milestone?.dueDate.substring(0, 10) || null);
+  const [inputDescription, setDescription] = useState(milestone?.description || null);
 
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
@@ -24,8 +24,6 @@ const MilestoneEditor = ({ milestone, setIsEditButtoneClicked }) => {
   };
 
   const onClickSubmit = async () => {
-    const POST_MILE_URL = 'http://localhost:3000/api/v1/milestones';
-    const PATCH_MILE_URL = `http://localhost:3000/api/v1/milestones/${milestone.id}`;
     const config = { withCredentials: true };
     const postData = {
       title: inputTitle,
@@ -33,11 +31,16 @@ const MilestoneEditor = ({ milestone, setIsEditButtoneClicked }) => {
       description: inputDescription,
     };
     try {
-      if (milestone) await axios.patch(PATCH_MILE_URL, postData, config);
-      else await axios.post(POST_MILE_URL, postData, config);
-      window.location.href = 'http://localhost:8000/milestones';
+      if (milestone) {
+        const PATCH_MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones/${milestone.id}`;
+        await axios.patch(PATCH_MILE_URL, postData, config);
+      } else {
+        const POST_MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones`;
+        await axios.post(POST_MILE_URL, postData, config);
+      }
+      window.location.href = `${process.env.WEB_URL}/milestones`;
     } catch (err) {
-      window.location.href = 'http://localhost:8000';
+      window.location.href = process.env.WEB_URL;
     }
   };
 

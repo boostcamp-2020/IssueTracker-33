@@ -15,9 +15,9 @@ const NewIssueOption = ({
   const [mileData, setMile] = useState('');
 
   useEffect(async () => {
-    const USER_URL = 'http://localhost:3000/api/v1/users';
-    const LABEL_URL = 'http://localhost:3000/api/v1/labels';
-    const MILE_URL = 'http://localhost:3000/api/v1/milestones';
+    const USER_URL = `${process.env.API_URL}/${process.env.API_VERSION}/users`;
+    const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
+    const MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones`;
 
     const userProm = axios.get(USER_URL, { withCredentials: true });
     const labelProm = axios.get(LABEL_URL, { withCredentials: true });
@@ -29,7 +29,7 @@ const NewIssueOption = ({
       setLabel(labelResolve.data);
       setMile(mileResolve.data);
     } catch (err) {
-      window.location.href = 'http://localhost:8000';
+      window.location.href = process.env.WEB_URL;
     }
   }, []);
 

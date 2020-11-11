@@ -8,12 +8,12 @@ const MilestonePage = () => {
   const [whichMile, setWhichMile] = useState(1);
 
   useEffect(async () => {
-    const MILE_URL = 'http://localhost:3000/api/v1/milestones/count';
+    const MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones/count`;
     try {
       const milesResolve = await axios.get(MILE_URL, { withCredentials: true });
       setMilestoneList([...Object.values(milesResolve.data)]);
     } catch (err) {
-      window.location.href = 'http://localhost:8000';
+      window.location.href = process.env.WEB_URL;
     }
   }, []);
 
