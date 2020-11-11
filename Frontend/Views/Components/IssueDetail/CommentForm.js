@@ -100,6 +100,7 @@ const CommentForm = ({
     }
     e.preventDefault();
     (isEdit ? editComment : createComment)();
+    setCommentError(false);
   };
 
   const onChangeComment = (e) => {

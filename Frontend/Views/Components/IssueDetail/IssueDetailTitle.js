@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from '../ErrorMessage';
 
 const IssueDetailTitle = ({ issueData, isOpen }) => {
   const [title, setTitle] = useState();
@@ -45,6 +45,7 @@ const IssueDetailTitle = ({ issueData, isOpen }) => {
       if (isTitle) return;
 
       editTitle();
+      setTitleError(false);
     }
     if (!isEdit) setBeforeTitle(title);
     setIsEdit(!isEdit);
