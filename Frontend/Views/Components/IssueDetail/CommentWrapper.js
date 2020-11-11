@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
 
-const CommentWrapper = ({ comment, isOwner }) => {
+const CommentWrapper = ({ comment, isOwner, isWriter }) => {
   const [description, setDescription] = useState(comment.description);
   const [isDescription, setIsDescription] = useState(true);
 
@@ -12,9 +12,11 @@ const CommentWrapper = ({ comment, isOwner }) => {
 
   return (
     <>
-      <button type="button" onClick={onClickEdit}>
-        edit
-      </button>
+      {isWriter && (
+        <button type="button" onClick={onClickEdit}>
+          edit
+        </button>
+      )}
       {isDescription ? (
         <Comment description={description} />
       ) : (
