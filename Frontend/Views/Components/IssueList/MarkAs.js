@@ -2,9 +2,14 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import useClickOutside from '../Modal';
 import { ReloadContext } from '../../Pages/IssuesPage';
+import { CheckedIssuesContext, AllCheckedContext, IsMarkAsContext } from './IssueList';
 
-const MarkAs = ({ checkedIssues, setIsMarkAs, setAllChecked }) => {
+const MarkAs = () => {
   const { reloadDispatch } = useContext(ReloadContext);
+  const { checkedIssues } = useContext(CheckedIssuesContext);
+  const { allCheckedDispatch } = useContext(AllCheckedContext);
+  const { isMarkAsDispatch } = useContext(IsMarkAsContext);
+
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -17,18 +22,17 @@ const MarkAs = ({ checkedIssues, setIsMarkAs, setAllChecked }) => {
 
   const MarkAsList = () => {
     const onChangeStatus = async (status) => {
+      const URL = `${process.env.API_URL}/${process.env.API_VERSION}/issues/status`;
+      const config = { withCredentials: true };
+      const postData = {
+        issues: checkedIssues,
+        isOpen: status,
+      };
       try {
-        await axios.patch(
-          'http://localhost:3000/api/v1/issues/status',
-          {
-            issues: checkedIssues,
-            isOpen: status,
-          },
-          { withCredentials: true },
-        );
+        await axios.patch(URL, postData, config);
         onToggleDropdown();
-        setIsMarkAs(false);
-        setAllChecked(false);
+        isMarkAsDispatch({ type: 'set', data: false });
+        allCheckedDispatch({ type: 'set', data: false });
         reloadDispatch({ type: 'switch' });
       } catch (err) {
         console.log('error');
@@ -50,7 +54,7 @@ const MarkAs = ({ checkedIssues, setIsMarkAs, setAllChecked }) => {
         <button type="button" onClick={onToggleDropdown}>
           Mark as
         </button>
-        {isVisible && <MarkAsList checkedIssues={checkedIssues} />}
+        {isVisible && <MarkAsList />}
       </div>
     </>
   );

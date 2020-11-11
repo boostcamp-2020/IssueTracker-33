@@ -1,20 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { CheckedIssuesContext, IsCheckAllContext, AllCheckedContext, IsMarkAsContext } from './IssueList';
 
-const IssueListItem = ({
-  issue,
-  author,
-  labels,
-  assignees,
-  milestone,
-  setCheckedIssues,
-  checkedIssues,
-  isCheckAll,
-  setAllChecked,
-  allChecked,
-  isMarkAs,
-}) => {
+const IssueListItem = ({ issueMetaData }) => {
   const [isChecked, setIsChecked] = useState(false);
+  const { checkedIssuesDispatch } = useContext(CheckedIssuesContext);
+  const { isCheckAll } = useContext(IsCheckAllContext);
+  const { allChecked, allCheckedDispatch } = useContext(AllCheckedContext);
+  const { isMarkAs } = useContext(IsMarkAsContext);
+  const { issue, author, labels, assignees, milestone } = issueMetaData;
 
   const history = useHistory();
 
@@ -37,11 +31,11 @@ const IssueListItem = ({
   const onCheckIssue = () => {
     if (isChecked === false) {
       setIsChecked(true);
-      setCheckedIssues([...checkedIssues, issue.id]);
+      checkedIssuesDispatch({ type: 'add', data: issue.id });
     } else {
       setIsChecked(false);
-      setCheckedIssues(checkedIssues.filter((elem) => elem !== issue.id));
-      setAllChecked(false);
+      checkedIssuesDispatch({ type: 'filter', option: issue.id });
+      allCheckedDispatch({ type: 'set', data: false });
     }
   };
 

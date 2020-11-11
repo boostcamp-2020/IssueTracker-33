@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { useHistory, Route, Switch } from 'react-router-dom';
-
 import NewIssuePage from './Pages/NewIssuePage';
 import IssueMainPage from './Pages/IssueMainPage';
 import IssueDetailPage from './Pages/IssueDetailPage';

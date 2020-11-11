@@ -3,9 +3,11 @@ import { useHistory } from 'react-router-dom';
 import useClickOutside from '../Modal';
 import getUserId from '../../../Sources/user';
 import { ReloadContext } from '../../Pages/IssuesPage';
+import { IsQueryContext } from './IssueList';
 
-const TopFilter = ({ setResetQuery }) => {
+const TopFilter = () => {
   const { reloadDispatch } = useContext(ReloadContext);
+  const { isQueryDispatch } = useContext(IsQueryContext);
 
   const [isVisible, setIsVisible] = useState(false);
   const history = useHistory();
@@ -20,7 +22,7 @@ const TopFilter = ({ setResetQuery }) => {
   const onClickFilter = (queryString) => {
     history.push(`/issues?${queryString}`);
     onToggleDropdown();
-    setResetQuery(true);
+    isQueryDispatch({ type: 'switch', data: true });
     reloadDispatch({ type: 'switch' });
   };
 

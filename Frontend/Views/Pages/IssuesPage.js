@@ -1,23 +1,22 @@
 import React, { useEffect, useReducer, useContext } from 'react';
 import axios from 'axios';
-// eslint-disable-next-line import/no-cycle
 import IssueList from '../Components/IssueList/IssueList';
 
 const issuesReducer = (issues, { type, data }) => {
-  // eslint-disable-next-line default-case
   switch (type) {
     case 'setInitial':
       return data;
+    default:
   }
 };
 
 const reloadReducer = (reload, { type }) => {
-  // eslint-disable-next-line default-case
   switch (type) {
     case 'setInitial':
       return true;
     case 'switch':
       return !reload;
+    default:
   }
 };
 
