@@ -121,8 +121,8 @@ const IssueList = () => {
     return {
       issue,
       author: mappedUsers[issue.userId],
-      labels: issue.labels || issue.labels.map((id) => mappedLabels[id]),
-      assignees: issue.assignees || issue.assignees.map((id) => mappedUsers[id]),
+      labels: issue.labels.map((id) => mappedLabels[id]),
+      assignees: issue.assignees.map((id) => mappedUsers[id]),
       milestone: mappedMilestones[issue.milestoneId],
     };
   };
@@ -151,6 +151,7 @@ const IssueList = () => {
           </IsCheckAllContext.Provider>
         </AllCheckedContext.Provider>
       </IsMarkAsContext.Provider>
+      {console.log(checkedIssues)}
     </div>
   );
 };

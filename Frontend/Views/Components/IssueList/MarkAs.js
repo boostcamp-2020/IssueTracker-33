@@ -6,7 +6,7 @@ import { CheckedIssuesContext, AllCheckedContext, IsMarkAsContext } from './Issu
 
 const MarkAs = () => {
   const { reloadDispatch } = useContext(ReloadContext);
-  const { checkedIssues } = useContext(CheckedIssuesContext);
+  const { checkedIssues, checkedIssuesDispatch } = useContext(CheckedIssuesContext);
   const { allCheckedDispatch } = useContext(AllCheckedContext);
   const { isMarkAsDispatch } = useContext(IsMarkAsContext);
 
@@ -33,6 +33,7 @@ const MarkAs = () => {
         onToggleDropdown();
         isMarkAsDispatch({ type: 'set', data: false });
         allCheckedDispatch({ type: 'set', data: false });
+        checkedIssuesDispatch({ type: 'deleteAll' });
         reloadDispatch({ type: 'switch' });
       } catch (err) {
         console.log('error');
