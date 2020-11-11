@@ -60,11 +60,16 @@ const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery
         return { ...acc, [key]: value };
       }, {});
     }
-    const newQuery = {
-      ...oldQuery,
-      [name]: id,
-    };
 
+    let newQuery = {};
+    if (oldQuery[name] === id) {
+      delete oldQuery[name];
+    } else {
+      newQuery = {
+        ...oldQuery,
+        [name]: id,
+      };
+    }
     const newQueryString = Object.keys(newQuery).reduce((acc, key) => {
       return `${acc}${acc === '' ? '' : '&'}${key}=${newQuery[key]}`;
     }, '');
