@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CheckedIssuesContext, IsCheckAllContext, AllCheckedContext, IsMarkAsContext } from './IssueList';
+import { CheckedIssuesContext, IsCheckAllContext, AllCheckedContext, IsMarkAsContext } from '../../store/IssuesListStore';
 
 const IssueListItem = ({ issueMetaData }) => {
   const [isChecked, setIsChecked] = useState(false);

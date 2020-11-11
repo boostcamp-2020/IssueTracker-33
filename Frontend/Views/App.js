@@ -8,34 +8,7 @@ import LoginPage from './Pages/LoginPage';
 import LabelPage from './Pages/LabelPage';
 import MilestonPage from './Pages/MilestonePage';
 import NewMilestonePage from './Pages/NewMilestonePage';
-
-const milestonesReducer = (milestones, { type, data }) => {
-  switch (type) {
-    case 'setInitial':
-      return data;
-    default:
-  }
-};
-
-const labelsReducer = (labels, { type, data }) => {
-  switch (type) {
-    case 'setInitial':
-      return data;
-    default:
-  }
-};
-
-const usersReducer = (users, { type, data }) => {
-  switch (type) {
-    case 'setInitial':
-      return data;
-    default:
-  }
-};
-
-export const UsersContext = React.createContext();
-export const MilestonesContext = React.createContext();
-export const LabelsContext = React.createContext();
+import { milestonesReducer, labelsReducer, usersReducer, MilestonesContext, LabelsContext, UsersContext } from './store/AppStore';
 
 const App = () => {
   const history = useHistory();
@@ -88,5 +61,4 @@ const App = () => {
     </LabelsContext.Provider>
   );
 };
-
 export default App;

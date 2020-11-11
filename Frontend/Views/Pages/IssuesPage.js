@@ -1,27 +1,7 @@
 import React, { useEffect, useReducer, useContext } from 'react';
 import axios from 'axios';
 import IssueList from '../Components/IssueList/IssueList';
-
-const issuesReducer = (issues, { type, data }) => {
-  switch (type) {
-    case 'setInitial':
-      return data;
-    default:
-  }
-};
-
-const reloadReducer = (reload, { type }) => {
-  switch (type) {
-    case 'setInitial':
-      return true;
-    case 'switch':
-      return !reload;
-    default:
-  }
-};
-
-export const IssuesContext = React.createContext();
-export const ReloadContext = React.createContext();
+import { issuesReducer, reloadReducer, IssuesContext, ReloadContext } from '../store/IssuesPageStore';
 
 const IssuesPage = () => {
   const [issues, issuesDispatch] = useReducer(issuesReducer, []);

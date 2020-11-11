@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ReloadContext } from '../../Pages/IssuesPage';
-import { IsQueryContext, isQueryContext } from './IssueList';
+import { ReloadContext } from '../../store/IssuesPageStore';
+import { IsQueryContext } from '../../store/IssuesListStore';
+
 const UserItem = ({ value }) => {
   return (
     <>

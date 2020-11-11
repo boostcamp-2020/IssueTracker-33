@@ -1,72 +1,23 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
 import IssueListItem from './IssueListItem';
 import TopFilter from './TopFilter';
 import MarkAs from './MarkAs';
 import Alma from './Alma';
-import { MilestonesContext, LabelsContext, UsersContext } from '../../App';
-import { IssuesContext, ReloadContext } from '../../Pages/IssuesPage';
-
-const toKeyValueMap = (records) => {
-  if (!records) return;
-  const map = {};
-  records.forEach((record) => {
-    map[record.id] = record;
-  });
-  return map;
-};
-
-const isQueryReducer = (isQuery, { type, data }) => {
-  switch (type) {
-    case 'switch':
-      return data;
-    default:
-  }
-};
-
-const checkedIssuesReducer = (checkedIssues, { type, data, option }) => {
-  switch (type) {
-    case 'addAll':
-      return data;
-    case 'deleteAll':
-      return [];
-    case 'add':
-      return [...checkedIssues, data];
-    case 'filter':
-      return checkedIssues.filter((elem) => elem !== option);
-    default:
-  }
-};
-
-const isCheckAllReducer = (isCheckAll, { type, data }) => {
-  switch (type) {
-    case 'set':
-      return data;
-    default:
-  }
-};
-
-const allCheckedReducer = (allChecked, { type, data }) => {
-  switch (type) {
-    case 'set':
-      return data;
-    default:
-  }
-};
-
-const isMarkAsReducer = (isMarkAs, { type, data }) => {
-  switch (type) {
-    case 'set':
-      return data;
-    default:
-  }
-};
-
-export const IsQueryContext = React.createContext();
-export const CheckedIssuesContext = React.createContext();
-export const IsCheckAllContext = React.createContext();
-export const AllCheckedContext = React.createContext();
-export const IsMarkAsContext = React.createContext();
+import { MilestonesContext, LabelsContext, UsersContext } from '../../store/AppStore';
+import { IssuesContext, ReloadContext } from '../../store/IssuesPageStore';
+import {
+  isQueryReducer,
+  checkedIssuesReducer,
+  isCheckAllReducer,
+  allCheckedReducer,
+  isMarkAsReducer,
+  IsQueryContext,
+  CheckedIssuesContext,
+  IsCheckAllContext,
+  AllCheckedContext,
+  IsMarkAsContext,
+} from '../../store/IssuesListStore';
 
 const IssueList = () => {
   const { reloadDispatch } = useContext(ReloadContext);
@@ -74,9 +25,6 @@ const IssueList = () => {
   const { users } = useContext(UsersContext);
   const { labels } = useContext(LabelsContext);
   const { milestones } = useContext(MilestonesContext);
-  const mappedUsers = toKeyValueMap(users);
-  const mappedLabels = toKeyValueMap(labels);
-  const mappedMilestones = toKeyValueMap(milestones);
 
   const [checkedIssues, checkedIssuesDispatch] = useReducer(checkedIssuesReducer, []);
   const [isQuery, isQueryDispatch] = useReducer(isQueryReducer, window.location.search !== '');
@@ -117,6 +65,17 @@ const IssueList = () => {
     reloadDispatch({ type: 'switch' });
   };
 
+  const toKeyValueMap = (records) => {
+    if (!records) return;
+    const map = {};
+    records.forEach((record) => {
+      map[record.id] = record;
+    });
+    return map;
+  };
+  const mappedUsers = toKeyValueMap(users);
+  const mappedLabels = toKeyValueMap(labels);
+  const mappedMilestones = toKeyValueMap(milestones);
   const getMetaData = (issue) => {
     return {
       issue,
@@ -151,7 +110,6 @@ const IssueList = () => {
           </IsCheckAllContext.Provider>
         </AllCheckedContext.Provider>
       </IsMarkAsContext.Provider>
-      {console.log(checkedIssues)}
     </div>
   );
 };

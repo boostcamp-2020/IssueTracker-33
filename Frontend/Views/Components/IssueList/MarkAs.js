@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import useClickOutside from '../Modal';
-import { ReloadContext } from '../../Pages/IssuesPage';
-import { CheckedIssuesContext, AllCheckedContext, IsMarkAsContext } from './IssueList';
+import { ReloadContext } from '../../store/IssuesPageStore';
+import { CheckedIssuesContext, AllCheckedContext, IsMarkAsContext } from '../../store/IssuesListStore';
 
 const MarkAs = () => {
   const { reloadDispatch } = useContext(ReloadContext);
