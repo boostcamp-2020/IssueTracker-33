@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import useClickOutside from '../Modal';
+import { ReloadContext } from '../../Pages/IssuesPage';
 
-const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs, setAllChecked }) => {
+const MarkAs = ({ checkedIssues, setIsMarkAs, setAllChecked }) => {
+  const { reloadDispatch } = useContext(ReloadContext);
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -27,7 +29,7 @@ const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs, setAllChecked }) => {
         onToggleDropdown();
         setIsMarkAs(false);
         setAllChecked(false);
-        reloadIssue();
+        reloadDispatch({ type: 'switch' });
       } catch (err) {
         console.log('error');
       }
@@ -48,7 +50,7 @@ const MarkAs = ({ checkedIssues, reloadIssue, setIsMarkAs, setAllChecked }) => {
         <button type="button" onClick={onToggleDropdown}>
           Mark as
         </button>
-        {isVisible && <MarkAsList checkedIssues={checkedIssues} reloadIssue={reloadIssue} />}
+        {isVisible && <MarkAsList checkedIssues={checkedIssues} />}
       </div>
     </>
   );

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { ReloadContext } from '../../Pages/IssuesPage';
 const UserItem = ({ value }) => {
   return (
     <>
@@ -28,7 +28,8 @@ const MilestoneItem = ({ value }) => {
   );
 };
 
-const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery }) => {
+const ChoiceList = ({ name, values, onToggleDropdown, setResetQuery }) => {
+  const { reloadDispatch } = useContext(ReloadContext);
   let ItemComponent;
   switch (name) {
     case 'author':
@@ -77,7 +78,7 @@ const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery
     history.push(`/issues?${newQueryString}`);
     onToggleDropdown();
     setResetQuery(true);
-    reloadIssue();
+    reloadDispatch({ type: 'switch' });
   };
 
   return (

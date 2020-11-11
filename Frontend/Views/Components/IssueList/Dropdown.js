@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useClickOutside from '../Modal';
 import ChoiceList from './ChoiceList';
 
-const Dropdown = ({ name, values, reloadIssue, setResetQuery }) => {
+const Dropdown = ({ name, values, setResetQuery }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const domNode = useClickOutside(() => {
@@ -20,13 +20,7 @@ const Dropdown = ({ name, values, reloadIssue, setResetQuery }) => {
           {name}
         </button>
         {isVisible && (
-          <ChoiceList
-            name={name}
-            values={values}
-            reloadIssue={reloadIssue}
-            onToggleDropdown={onToggleDropdown}
-            setResetQuery={setResetQuery}
-          />
+          <ChoiceList name={name} values={values} onToggleDropdown={onToggleDropdown} setResetQuery={setResetQuery} />
         )}
       </div>
     </>

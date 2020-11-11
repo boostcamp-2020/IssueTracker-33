@@ -1,13 +1,13 @@
 import React from 'react';
 import Dropdown from './Dropdown';
 
-const Alma = ({ users, labels, milestones, reloadIssue, setResetQuery }) => {
+const Alma = ({ users, labels, milestones, setResetQuery }) => {
   return (
     <>
-      <Dropdown name="author" values={users} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
-      <Dropdown name="label" values={labels} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
-      <Dropdown name="milestone" values={milestones} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
-      <Dropdown name="assignee" values={users} reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <Dropdown name="author" values={users} setResetQuery={setResetQuery} />
+      <Dropdown name="label" values={labels} setResetQuery={setResetQuery} />
+      <Dropdown name="milestone" values={milestones} setResetQuery={setResetQuery} />
+      <Dropdown name="assignee" values={users} setResetQuery={setResetQuery} />
     </>
   );
 };

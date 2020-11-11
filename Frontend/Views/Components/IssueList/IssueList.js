@@ -1,11 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import IssueListItem from './IssueListItem';
 import TopFilter from './TopFilter';
 import MarkAs from './MarkAs';
 import Alma from './Alma';
+// eslint-disable-next-line import/no-cycle
+import { MilestonesContext, LabelsContext, UsersContext } from '../../App';
+// eslint-disable-next-line import/no-cycle
+import { IssuesContext, ReloadContext } from '../../Pages/IssuesPage';
 
-const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
+const toKeyValueMap = (records) => {
+  if (!records) return;
+  const map = {};
+  records.forEach((record) => {
+    map[record.id] = record;
+  });
+  return map;
+};
+
+const IssueList = () => {
+  const { reloadDispatch } = useContext(ReloadContext);
+  const { issues } = useContext(IssuesContext);
+  const { users } = useContext(UsersContext);
+  const { labels } = useContext(LabelsContext);
+  const { milestones } = useContext(MilestonesContext);
+  const mappedUsers = toKeyValueMap(users);
+  const mappedLabels = toKeyValueMap(labels);
+  const mappedMilestones = toKeyValueMap(milestones);
+
   const [checkedIssues, setCheckedIssues] = useState([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [allChecked, setAllChecked] = useState(false);
@@ -42,43 +64,30 @@ const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
   const onClickReset = () => {
     setResetQuery(false);
     history.push('/issues');
-    reloadIssue();
+    reloadDispatch({ type: 'switch' });
   };
 
   return (
     <div>
-      <TopFilter reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
+      <TopFilter setResetQuery={setResetQuery} />
       {resetQuery && (
         <button type="button" onClick={onClickReset}>
           Clear current search query, filters, and sorts
         </button>
       )}
       <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-      {isMarkAs && (
-        <MarkAs
-          reloadIssue={reloadIssue}
-          checkedIssues={checkedIssues}
-          setIsMarkAs={setIsMarkAs}
-          setAllChecked={setAllChecked}
-        />
-      )}
+      {isMarkAs && <MarkAs checkedIssues={checkedIssues} setIsMarkAs={setIsMarkAs} setAllChecked={setAllChecked} />}
       {!isMarkAs && (
-        <Alma
-          reloadIssue={reloadIssue}
-          users={users}
-          labels={labels}
-          milestones={milestones}
-          setResetQuery={setResetQuery}
-        />
+        <Alma users={mappedUsers} labels={mappedLabels} milestones={mappedMilestones} setResetQuery={setResetQuery} />
       )}
       {issues.map((issue) => (
         <IssueListItem
           key={issue.id}
           issue={issue}
-          author={users[issue.userId]}
-          labels={issue.labels.map((id) => labels[id])}
-          assignees={issue.assignees.map((id) => users[id])}
-          milestone={milestones[issue.milestoneId]}
+          author={mappedUsers[issue.userId]}
+          labels={issue.labels.map((id) => mappedLabels[id])}
+          assignees={issue.assignees.map((id) => mappedUsers[id])}
+          milestone={mappedMilestones[issue.milestoneId]}
           setCheckedIssues={setCheckedIssues}
           checkedIssues={checkedIssues}
           isCheckAll={isCheckAll}
