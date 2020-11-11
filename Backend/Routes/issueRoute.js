@@ -6,7 +6,8 @@ router.get('/', getIssues);
 
 // TODO: refactor
 router.post('/', async (req, res) => {
-  const { title, userId, milestoneId, labels, assignees, comment } = req.body;
+  const { id: userId } = req.user;
+  const { title, milestoneId, labels, assignees, comment } = req.body;
 
   const conn = await db.getConnection();
   try {

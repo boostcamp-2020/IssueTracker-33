@@ -58,7 +58,7 @@ const CommentForm = ({
   const patchStatus = async (newStatus) => {
     try {
       return await axios.patch(
-        `http://localhost:3000/api/v1/issues/${issueId}/status`,
+        `${process.env.API_URL}/${process.env.API_VERSION}/issues/${issueId}/status`,
         {
           isOpen: newStatus,
         },

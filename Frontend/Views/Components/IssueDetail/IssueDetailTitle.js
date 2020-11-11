@@ -18,7 +18,7 @@ const IssueDetailTitle = ({ issueData, isOpen }) => {
   }, [title]);
 
   const patchTitle = async () => {
-    const ISSUE_URL = `http://localhost:3000/api/v1/issues/${issueData.id}/title`;
+    const ISSUE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/issues/${issueData.id}/title`;
     try {
       return await axios.patch(ISSUE_URL, { title }, { withCredentials: true });
     } catch (err) {
