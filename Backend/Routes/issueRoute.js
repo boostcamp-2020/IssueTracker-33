@@ -1,74 +1,8 @@
 const router = require('express').Router();
 const { db } = require('../Models/dbPool');
+const { getIssues, getSpecifiedIssue } = require('../Controllers/issueController');
 
-router.get('/', async (req, res) => {
-  try {
-    const { open, author, milestone, label, assignee, mentions } = req.query;
-
-    const innerFilterCondition = [];
-    const filterValues = [];
-    if (open !== undefined) {
-      innerFilterCondition.push('isOpen = ?');
-      filterValues.push(open);
-    } else {
-      // default: show open issues
-      innerFilterCondition.push('isOpen = ?');
-      filterValues.push('1');
-    }
-    if (author) {
-      innerFilterCondition.push('userId = ?');
-      filterValues.push(author);
-    }
-    if (milestone) {
-      innerFilterCondition.push('milestoneId = ?');
-      filterValues.push(milestone);
-    }
-
-    const whereClause = innerFilterCondition.length ? `WHERE ${innerFilterCondition.join(' AND ')}` : '';
-    let baseQuery = `SELECT DISTINCT ISS.id, ISS.userId, ISS.title, ISS.milestoneId, ISS.isOpen, ISS.createdAt, ISS.openCloseAt
-                     FROM (SELECT * FROM issues ${whereClause}) AS ISS`;
-
-    if (label || assignee || mentions) {
-      let joinClause = ' ';
-      let joinWhereClause = ' WHERE ';
-      if (label) {
-        joinClause += ' inner join labelIssue on ISS.id = labelIssue.issueId ';
-        joinWhereClause += ' labelIssue.labelId = ? ';
-        filterValues.push(label);
-      }
-      if (assignee) {
-        joinClause += ' inner join assignees on ISS.id = assignees.issueId ';
-        joinWhereClause += label ? ' AND ' : '';
-        joinWhereClause += ' assignees.userId = ? ';
-        filterValues.push(assignee);
-      }
-      if (mentions) {
-        joinClause += ' inner join comments on ISS.id = comments.issueId ';
-        joinWhereClause += label || assignee ? ' AND ' : '';
-        joinWhereClause += ' comments.userId = ? ';
-        filterValues.push(mentions);
-      }
-      baseQuery += joinClause + joinWhereClause;
-    }
-
-    const [issues] = await db.execute(baseQuery, filterValues);
-    const results = issues.map(async (issue) => {
-      let [labels] = await db.execute('SELECT labelId FROM labelIssue WHERE issueId = ? ORDER BY labelId ASC', [
-        issue.id,
-      ]);
-      labels = labels.map(({ labelId }) => labelId);
-      let [assignees] = await db.execute('SELECT userId FROM assignees WHERE issueId = ? ORDER BY userId ASC', [
-        issue.id,
-      ]);
-      assignees = assignees.map(({ userId }) => userId);
-      return { ...issue, labels, assignees };
-    });
-    const resolved = await Promise.all(results);
-    res.json(resolved);
-  } catch (err) {
-    res.status(400).end();
-  }
-});
+router.get('/', getIssues);
 
 router.post('/', async (req, res) => {
   const { title, userId, milestoneId, labels, assignees, comment } = req.body;
@@ -115,22 +49,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/:issueId', async (req, res) => {
-  try {
-    const [[issue]] = await db.execute('SELECT * FROM issues WHERE id = ?', [req.params.issueId]);
-    const [labelsResult] = await db.execute('SELECT labelId FROM labelIssue WHERE issueId = ? ORDER BY labelId ASC', [
-      issue.id,
-    ]);
-    const labels = labelsResult.map(({ labelId }) => labelId);
-    const [assigneesResult] = await db.execute('SELECT userId FROM assignees WHERE issueId = ? ORDER BY userId ASC', [
-      issue.id,
-    ]);
-    const assignees = assigneesResult.map(({ userId }) => userId);
-    res.status(200).json({ issue, labels, assignees });
-  } catch (err) {
-    res.status(400).end();
-  }
-});
+router.get('/:issueId', getSpecifiedIssue);
 
 router.get('/:issueId/comments', async (req, res) => {
   try {
