@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useHistory, Route, Switch } from 'react-router-dom';
 
 import NewIssuePage from './Pages/NewIssuePage';
 import IssueMainPage from './Pages/IssueMainPage';
@@ -10,8 +10,15 @@ import MilestonPage from './Pages/MilestonePage';
 import NewMilestonePage from './Pages/NewMilestonePage';
 
 const App = () => {
+  const history = useHistory();
+
+  const onClickHeader = () => {
+    history.push('/issues');
+  };
+
   return (
-    <Router>
+    <>
+      <div onClick={onClickHeader}>Issues</div>
       <Route exact path="/" component={LoginPage} />
       <Route exact path="/issues" component={IssueMainPage} />
       <Switch>
@@ -23,7 +30,7 @@ const App = () => {
         <Route exact path="/milestones/new" component={NewMilestonePage} />
       </Switch>
       <Route exact path="/labels" component={LabelPage} />
-    </Router>
+    </>
   );
 };
 
