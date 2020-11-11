@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import IssueDetailTitle from './IssueDetailTitle';
-import NewIssueOption from './NewIssueOption';
+import NewIssueOption from '../NewIssueOption';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 

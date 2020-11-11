@@ -1,5 +1,5 @@
 import React from 'react';
-import MarkdownRender from './MarkdownRender';
+import MarkdownRender from '../MarkdownRender';
 
 const Comment = ({ description, isOwner }) => {
   return (

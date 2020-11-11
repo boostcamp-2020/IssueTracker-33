@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NewIssueDropdown from './NewIssueDropdown';
+import NewIssueDropdown from './NewIssue/NewIssueDropdown';
 
 const NewIssueOption = ({
   userSelectedData,

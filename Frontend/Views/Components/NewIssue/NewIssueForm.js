@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import MarkdownRender from './MarkdownRender';
-import ErrorMessage from './ErrorMessage';
-import getUserId from '../../Sources/user';
+import MarkdownRender from '../MarkdownRender';
+import ErrorMessage from '../ErrorMessage';
+import getUserId from '../../../Sources/user';
 
 const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData }) => {
   const history = useHistory();

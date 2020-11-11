@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import IssueListItem from './IssueList/IssueListItem';
-import TopFilter from './IssueList/TopFilter';
-import MarkAs from './IssueList/MarkAs';
-import Alma from './IssueList/Alma';
+import IssueListItem from './IssueListItem';
+import TopFilter from './TopFilter';
+import MarkAs from './MarkAs';
+import Alma from './Alma';
 
 const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
   const [checkedIssues, setCheckedIssues] = useState([]);

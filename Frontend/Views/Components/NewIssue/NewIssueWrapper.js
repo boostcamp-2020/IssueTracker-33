@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NewIssueForm from './NewIssueForm';
-import NewIssueOption from './NewIssueOption';
+import NewIssueOption from '../NewIssueOption';
 
 const NewIssueWrapper = () => {
   const [userSelectedData, setUserSelectedData] = useState([]);

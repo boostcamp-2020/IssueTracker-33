@@ -1,5 +1,5 @@
 import React from 'react';
-import MilestoneEditor from '../Components/MilestoneEditor';
+import MilestoneEditor from '../Components/Milestone/MilestoneEditor';
 
 const NewMilestonePage = () => {
   return (

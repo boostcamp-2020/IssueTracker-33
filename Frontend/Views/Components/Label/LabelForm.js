@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import getRandomColor from '../../Sources/color';
+import getRandomColor from '../../../Sources/color';
 
 const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit }) => {
   const [name, setName] = useState('');

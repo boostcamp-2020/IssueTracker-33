@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import LabelList from '../Components/LabelList';
-import LabelForm from '../Components/LabelForm';
+import LabelList from '../Components/Label/LabelList';
+import LabelForm from '../Components/Label/LabelForm';
 
 const LabelPage = () => {
   const [labels, setLabels] = useState([]);

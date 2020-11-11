@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import MarkdownRender from './MarkdownRender';
-import ErrorMessage from './ErrorMessage';
+import MarkdownRender from '../MarkdownRender';
+import ErrorMessage from '../ErrorMessage';
 
 const CommentForm = ({
   issueId,
