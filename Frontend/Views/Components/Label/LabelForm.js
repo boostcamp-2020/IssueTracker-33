@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-const getRandomColor = () => {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-};
+import getRandomColor from '../../../Sources/color';
 
 const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit }) => {
   const [name, setName] = useState('');

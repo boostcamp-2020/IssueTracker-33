@@ -1,5 +1,5 @@
 import React from 'react';
-import NewIssueWrapper from '../Components/NewIssueWrapper';
+import NewIssueWrapper from '../Components/NewIssue/NewIssueWrapper';
 
 const NewIssuePage = () => {
   return (

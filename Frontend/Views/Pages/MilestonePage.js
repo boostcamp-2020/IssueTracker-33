@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import Milestone from '../Components/Milestone';
+import Milestone from '../Components/Milestone/Milestone';
 
 const MilestonePage = () => {
   const [milestoneList, setMilestoneList] = useState([]);

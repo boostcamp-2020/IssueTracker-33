@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import IssueList from '../Components/IssueList';
+import IssueList from '../Components/IssueList/IssueList';
 
 const toKeyValueMap = (records) => {
   const map = {};
