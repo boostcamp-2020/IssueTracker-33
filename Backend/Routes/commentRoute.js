@@ -2,11 +2,12 @@ const router = require('express').Router();
 const { db } = require('../Models/dbPool');
 
 router.post('/', async (req, res) => {
-  const { userId, issueId, description } = req.body;
+  const { id } = req.user;
+  const { issueId, description } = req.body;
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
-    const commentValues = [userId, issueId, description];
+    const commentValues = [id, issueId, description];
     const [result] = await conn.execute(
       'INSERT INTO comments(userId, issueId, description) VALUES(?, ?, ?)',
       commentValues,
