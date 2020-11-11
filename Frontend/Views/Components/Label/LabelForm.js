@@ -66,13 +66,12 @@ const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit })
   const onClickEdit = async () => {
     const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
     const postData = {
-      id: labelToEdit.id,
       name,
       description,
       color,
     };
     try {
-      await axios.patch(LABEL_URL, postData, { withCredentials: true });
+      await axios.patch(`${LABEL_URL}/${labelToEdit.id}`, postData, { withCredentials: true });
       setLabels(
         labels.map((label) => {
           if (label.id === labelToEdit.id) {
