@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import MarkdownRender from './MarkdownRender';
 import ErrorMessage from './ErrorMessage';
+import getUserId from '../../Sources/user';
 
 const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData }) => {
   const history = useHistory();
@@ -23,7 +24,8 @@ const NewIssueForm = ({ userSelectedData, labelSelectedData, mileSelectedData })
     const postData = {
       title,
       comment,
-      userId: 1,
+      userId: getUserId(document.cookie),
+      // userId: 1,
       milestoneId: mileSelectedData.map((elem) => elem.id)[0],
       labels: labelSelectedData.map((elem) => elem.id),
       assignees: userSelectedData.map((elem) => elem.id),
