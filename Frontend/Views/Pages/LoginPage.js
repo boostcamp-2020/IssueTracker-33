@@ -5,7 +5,7 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 const GrayBackground = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: #eeeeee;
+  background-color: var(--background-gray);
 `;
 
 const PageWrapper = styled.div`
@@ -50,7 +50,7 @@ const Input = styled.input`
 
 const GithubLogin = styled.button`
   width: 300px;
-  height: 35px;
+  height: 40px;
   margin-top: 30px;
   background-color: var(--login-gray);
   box-shadow: none;
@@ -61,6 +61,9 @@ const GithubLogin = styled.button`
   outline: none;
   border: none;
   text-align: center;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SubmitText = styled.div`
@@ -88,18 +91,18 @@ const LoginPage = () => {
               <div>
                 <InputDiv>
                   <h3>아이디 </h3>
-                  <Input type="text" />
+                  <Input type="text" disabled />
                 </InputDiv>
                 <InputDiv>
                   <h3>비밀번호 </h3>
-                  <Input type="password" />
+                  <Input type="password" disabled />
                 </InputDiv>
               </div>
               <div>
                 <GithubLogin type="button" onClick={githubOauth}>
                   <SubmitText>
                     <span>Sign in with Github</span>
-                    <GitHubIcon style={{ fontSize: 20 }} />
+                    <GitHubIcon style={{ fontSize: 22 }} />
                   </SubmitText>
                 </GithubLogin>
               </div>
