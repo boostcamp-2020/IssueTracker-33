@@ -1,10 +1,33 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import styled from 'styled-components';
 import MarkdownRender from '../MarkdownRender';
 import ErrorMessage from '../ErrorMessage';
-import { getUserId, getUserImageLink } from '../../../Sources/user';
+import { getUserImageLink } from '../../../Sources/user';
 import UserPhotoBlock from '../UserPhotoBlock';
+
+const NewIssueFormWrapper = styled.div`
+  display: flex;
+  width: 70%;
+  > * {
+    margin: 0px 10px;
+  }
+`;
+
+const NewIssueContentWrapper = styled.div`
+  border: 1px solid var(--border-gray);
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const MainTextWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const NewIssueForm = ({ selectedUsers, selecetdLabels, selectedMiles }) => {
   const history = useHistory();
@@ -89,22 +112,35 @@ const NewIssueForm = ({ selectedUsers, selecetdLabels, selectedMiles }) => {
   };
 
   return (
-    <>
+    <NewIssueFormWrapper>
       <UserPhotoBlock imageLink={getUserImageLink(document.cookie)} />
-      <input type="text" placeholder="Title" onChange={onChangeTitle} />
-      {titleError && <ErrorMessage message="제목을 입력해주세요." />}
-      <textarea type="text" placeholder="Leave a comment" onChange={onChangeComment} value={comment} />
-      <input placeholder="Attach files by selecting here" type="file" accept="image/png, image/jpeg, image/jpg" onChange={onUploadImage} />
-      {commentError && <ErrorMessage message="본문을 입력해주세요." />}
-      {imageError && <ErrorMessage message="이미지 업로드에 실패했습니다." />}
-      <button type="button" onClick={onClickCancel}>
-        Cancel
-      </button>
-      <button type="submit" onClick={onSubmitIssue} disabled={submitDisabled}>
-        Submit new issue
-      </button>
-      <MarkdownRender comment={comment} />
-    </>
+      <NewIssueContentWrapper>
+        <div>
+          <input type="text" placeholder="Title" onChange={onChangeTitle} />
+          {titleError && <ErrorMessage message="제목을 입력해주세요." />}
+        </div>
+        <div>
+          <MainTextWrapper>
+            <textarea type="text" placeholder="Leave a comment" onChange={onChangeComment} value={comment} />
+            <MarkdownRender comment={comment} />
+          </MainTextWrapper>
+          <input placeholder="Attach files by selecting here" type="file" accept="image/png, image/jpeg, image/jpg" onChange={onUploadImage} />
+          {commentError && <ErrorMessage message="본문을 입력해주세요." />}
+          {imageError && <ErrorMessage message="이미지 업로드에 실패했습니다." />}
+        </div>
+        <ButtonWrapper>
+          <div />
+          <div>
+            <button type="button" onClick={onClickCancel}>
+              Cancel
+            </button>
+            <button type="submit" onClick={onSubmitIssue} disabled={submitDisabled}>
+              Submit new issue
+            </button>
+          </div>
+        </ButtonWrapper>
+      </NewIssueContentWrapper>
+    </NewIssueFormWrapper>
   );
 };
 
