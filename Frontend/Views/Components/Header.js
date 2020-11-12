@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
 import styled from 'styled-components';
 
@@ -18,13 +19,22 @@ const HeaderWrapper = styled.div`
     margin: 0;
     text-align: center;
   }
+
+  p:hover {
+    cursor: pointer;
+  }
 `;
 
 const Header = () => {
+  const history = useHistory();
+
+  const onClickHeader = () => {
+    history.push('/issues');
+  };
   return (
     <HeaderWrapper>
       <ClassOutlinedIcon color="white" />
-      <p>ISSUES</p>
+      <p onClick={onClickHeader}>ISSUES</p>
     </HeaderWrapper>
   );
 };

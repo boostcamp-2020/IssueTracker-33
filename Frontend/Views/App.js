@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
-import { useHistory, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import NewIssuePage from './Pages/NewIssuePage';
 import IssueMainPage from './Pages/IssueMainPage';
 import IssueDetailPage from './Pages/IssueDetailPage';
@@ -21,11 +21,6 @@ import Header from './Components/Header';
 import GlobalStyle from '../style/globalStyles';
 
 const App = () => {
-  const history = useHistory();
-
-  const onClickHeader = () => {
-    history.push('/issues');
-  };
   const [milestones, milestonesDispatch] = useReducer(milestonesReducer, '');
   const [labels, labelsDispatch] = useReducer(labelsReducer, '');
   const [users, usersDispatch] = useReducer(usersReducer, '');
@@ -57,7 +52,7 @@ const App = () => {
       <UsersContext.Provider value={{ users, usersDispatch }}>
         <MilestonesContext.Provider value={{ milestones, milestonesDispatch }}>
           <GlobalStyle />
-          <Header onClick={onClickHeader}>Issues</Header>
+          <Header>Issues</Header>
           <Route exact path="/" component={LoginPage} />
           <Route exact path="/issues" component={IssueMainPage} />
           <Switch>
