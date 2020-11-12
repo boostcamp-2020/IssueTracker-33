@@ -45,7 +45,7 @@ const IssueList = () => {
   const { labels } = useContext(LabelsContext);
   const { milestones } = useContext(MilestonesContext);
 
-  const [fullfilled, setFullfilled] = useState(false);
+  const [fulfilled, setFulfilled] = useState(false);
 
   const [checkedIssues, checkedIssuesDispatch] = useReducer(checkedIssuesReducer, []);
   const [isQuery, isQueryDispatch] = useReducer(isQueryReducer, window.location.search !== '');
@@ -54,6 +54,12 @@ const IssueList = () => {
   const [isMarkAs, isMarkAsDispatch] = useReducer(isMarkAsReducer, false);
 
   const history = useHistory();
+
+  useEffect(() => {
+    if (issues.length && milestones && labels && users) {
+      setFulfilled(true);
+    }
+  }, [issues, milestones, labels, users]);
 
   useEffect(() => {
     if (checkedIssues.length === 0) {
@@ -107,12 +113,6 @@ const IssueList = () => {
     };
   };
 
-  useEffect(() => {
-    if (issues.leg) {
-      setFullfilled(true);
-    }
-  }, [issues, labels, milestones, users]);
-
   return (
     <div>
       <IsMarkAsContext.Provider value={{ isMarkAs, isMarkAsDispatch }}>
@@ -131,7 +131,7 @@ const IssueList = () => {
                   </AlmaStyle>
                 </Tab>
                 {isQuery && <CustomButton onClick={onClickReset}>Clear current search query, filters, and sorts</CustomButton>}
-                {fullfilled && issues.map((issue) => <IssueListItem key={issue.id} issueMetaData={getMetaData(issue)} />)}
+                {fulfilled && issues.map((issue) => <IssueListItem key={issue.id} issueMetaData={getMetaData(issue)} />)}
               </IsQueryContext.Provider>
             </CheckedIssuesContext.Provider>
           </IsCheckAllContext.Provider>
