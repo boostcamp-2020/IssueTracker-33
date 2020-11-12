@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { ReloadContext } from '../../store/IssuesPageStore';
+import { IsQueryContext } from '../../store/IssuesListStore';
 
 const UserItem = ({ value }) => {
   return (
@@ -28,7 +30,9 @@ const MilestoneItem = ({ value }) => {
   );
 };
 
-const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery }) => {
+const ChoiceList = ({ name, values, onToggleDropdown }) => {
+  const { reloadDispatch } = useContext(ReloadContext);
+  const { isQueryDispatch } = useContext(IsQueryContext);
   let ItemComponent;
   switch (name) {
     case 'author':
@@ -76,8 +80,8 @@ const ChoiceList = ({ name, values, reloadIssue, onToggleDropdown, setResetQuery
 
     history.push(`/issues?${newQueryString}`);
     onToggleDropdown();
-    setResetQuery(true);
-    reloadIssue();
+    isQueryDispatch({ type: 'switch', data: true });
+    reloadDispatch({ type: 'switch' });
   };
 
   return (

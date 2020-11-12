@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import useClickOutside from '../Modal';
-import getUserId from '../../../Sources/user';
+import { getUserId } from '../../../Sources/user';
+import { ReloadContext } from '../../store/IssuesPageStore';
+import { IsQueryContext } from '../../store/IssuesListStore';
 
-const TopFilter = ({ reloadIssue, setResetQuery }) => {
+const TopFilter = () => {
+  const { reloadDispatch } = useContext(ReloadContext);
+  const { isQueryDispatch } = useContext(IsQueryContext);
+
   const [isVisible, setIsVisible] = useState(false);
   const history = useHistory();
   const domNode = useClickOutside(() => {
@@ -17,21 +22,8 @@ const TopFilter = ({ reloadIssue, setResetQuery }) => {
   const onClickFilter = (queryString) => {
     history.push(`/issues?${queryString}`);
     onToggleDropdown();
-    setResetQuery(true);
-    reloadIssue();
-  };
-
-  const TopFilterMenu = () => {
-    return (
-      <>
-        <div>Filter Issues</div>
-        <div onClick={() => onClickFilter('open=1')}>Open Issues</div>
-        <div onClick={() => onClickFilter(`author=${getUserId(document.cookie)}`)}>Your Issues</div>
-        <div onClick={() => onClickFilter(`assignee=${getUserId(document.cookie)}`)}>Everything assigned to you</div>
-        <div onClick={() => onClickFilter(`mentions=${getUserId(document.cookie)}`)}>Everything mentioning you</div>
-        <div onClick={() => onClickFilter('open=0')}>Closed Issues</div>
-      </>
-    );
+    isQueryDispatch({ type: 'switch', data: true });
+    reloadDispatch({ type: 'switch' });
   };
 
   return (
@@ -41,7 +33,16 @@ const TopFilter = ({ reloadIssue, setResetQuery }) => {
           Filters
         </button>
         <input type="text" />
-        {isVisible && <TopFilterMenu />}
+        {isVisible && (
+          <div>
+            <div>Filter Issues</div>
+            <div onClick={() => onClickFilter('open=1')}>Open Issues</div>
+            <div onClick={() => onClickFilter(`author=${getUserId(document.cookie)}`)}>Your Issues</div>
+            <div onClick={() => onClickFilter(`assignee=${getUserId(document.cookie)}`)}>Everything assigned to you</div>
+            <div onClick={() => onClickFilter(`mentions=${getUserId(document.cookie)}`)}>Everything mentioning you</div>
+            <div onClick={() => onClickFilter('open=0')}>Closed Issues</div>
+          </div>
+        )}
       </div>
     </>
   );

@@ -24,6 +24,7 @@ module.exports = (env, options) => {
       filename: 'main.js',
       path: path.join(__dirname, 'dist'),
     },
+    devtool: 'eval',
     devServer: {
       port: 8000,
       contentBase: path.join(__dirname, 'dist'),

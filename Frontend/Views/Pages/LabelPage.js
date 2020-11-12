@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import LabelList from '../Components/Label/LabelList';
 import LabelForm from '../Components/Label/LabelForm';
+import { LabelsContext } from '../store/AppStore';
 
 const LabelPage = () => {
-  const [labels, setLabels] = useState([]);
+  const { labels } = useContext(LabelsContext);
   const [isFormVisible, setIsFormVisible] = useState(false);
-
-  useEffect(async () => {
-    const { data } = await axios.get(`${process.env.API_URL}/${process.env.API_VERSION}/labels`, {
-      withCredentials: true,
-    });
-    setLabels(data);
-  }, []);
 
   const onToggleForm = () => {
     setIsFormVisible(!isFormVisible);
@@ -32,8 +26,8 @@ const LabelPage = () => {
           New Label
         </button>
       </div>
-      {isFormVisible && <LabelForm setIsFormVisible={setIsFormVisible} labels={labels} setLabels={setLabels} />}
-      <LabelList labels={labels} setLabels={setLabels} setIsFormVisible={setIsFormVisible} />
+      {isFormVisible && <LabelForm setIsFormVisible={setIsFormVisible} />}
+      <LabelList labels={labels} setIsFormVisible={setIsFormVisible} />
     </>
   );
 };

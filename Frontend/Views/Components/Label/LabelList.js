@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import LabelForm from './LabelForm';
+import { LabelsContext } from '../../store/AppStore';
 
-const LabelList = ({ labels, setLabels, setIsFormVisible }) => {
+const LabelList = ({ setIsFormVisible }) => {
+  const { labels, labelsDispatch } = useContext(LabelsContext);
   const onClickDelete = async (id) => {
     const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
     try {
       await axios.delete(`${LABEL_URL}/${id}`, { withCredentials: true });
-      setLabels(labels.filter((label) => label.id !== id));
+      labelsDispatch({ type: 'delete', target: id });
     } catch (err) {
       console.log('error');
     }
@@ -26,15 +28,7 @@ const LabelList = ({ labels, setLabels, setIsFormVisible }) => {
           <button type="button" onClick={() => onClickDelete(label.id)}>
             Delete
           </button>
-          {isEdit && (
-            <LabelForm
-              isEdit
-              labels={labels}
-              labelToEdit={label}
-              setLabels={setLabels}
-              setIsFormVisible={setIsFormVisible}
-            />
-          )}
+          {isEdit && <LabelForm isEdit labelToEdit={label} setIsFormVisible={setIsFormVisible} />}
         </div>
       </>
     );
@@ -42,12 +36,8 @@ const LabelList = ({ labels, setLabels, setIsFormVisible }) => {
 
   return (
     <>
-      <div>{`${labels.length} labels`}</div>
-      {labels.map((label) => (
-        <>
-          <LabelItem key={label.id} label={label} />
-        </>
-      ))}
+      <div>{`${labels?.length} labels`}</div>
+      {labels && labels.map((label) => <LabelItem key={label.id} label={label} />)}
     </>
   );
 };
