@@ -1,7 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-	font-family: 'Open Sans', sans-serif;
 
 	:root {
 		--login-gray: #A0A0A0;
@@ -16,8 +15,8 @@ const GlobalStyle = createGlobalStyle`
 		--tab-blue: #0466D6;
 	}
 
-
 	body {
+		font-family: 'Open Sans', sans-serif;
 		margin: 0;
 		padding: 0;
 	}

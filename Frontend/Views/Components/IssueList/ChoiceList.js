@@ -2,23 +2,47 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ReloadContext } from '../../store/IssuesPageStore';
 import { IsQueryContext } from '../../store/IssuesListStore';
+import styled from 'styled-components';
 
+const UserImg = styled.img`
+  src: ${(props) => props.src};
+  alt: ${(props) => props.alt};
+
+  width: 20px;
+  height: auto;
+  border-radius: 10px;
+`;
+const UserItemWrapper = styled.div`
+  display: flex;
+`;
 const UserItem = ({ value }) => {
   return (
-    <>
-      <img src={value.imageLink} alt={value.username} />
+    <UserItemWrapper>
+      <UserImg src={value.imageLink} alt={value.username} />
       <span>{value.username}</span>
-    </>
+    </UserItemWrapper>
   );
 };
 
+const LabelColor = styled.div`
+  background-color: ${(props) => props.color};
+  min-width: 20px;
+  max-height: 20px;
+  border-radius: 10px;
+`;
+
+const LabelItemWrapper = styled.div`
+  display: flex;
+`;
 const LabelItem = ({ value }) => {
   return (
-    <>
-      <span>{value.color}</span>
-      <span>{value.name}</span>
-      <span>{value.desc}</span>
-    </>
+    <LabelItemWrapper>
+      <LabelColor color={value.color} />
+      <div>
+        <div>{value.name}</div>
+        <div>{value.description}</div>
+      </div>
+    </LabelItemWrapper>
   );
 };
 
@@ -30,6 +54,16 @@ const MilestoneItem = ({ value }) => {
   );
 };
 
+const ChoiceListWrapper = styled.div`
+  position: absolute;
+  background-color: wheat;
+  border-radius: 5px;
+  width: 200px;
+  padding: 7px;
+  top: 50px;
+  right: 0px;
+  z-index: 1;
+`;
 const ChoiceList = ({ name, values, onToggleDropdown }) => {
   const { reloadDispatch } = useContext(ReloadContext);
   const { isQueryDispatch } = useContext(IsQueryContext);
@@ -85,17 +119,16 @@ const ChoiceList = ({ name, values, onToggleDropdown }) => {
   };
 
   return (
-    <>
+    <ChoiceListWrapper>
       <div>{`Filter by ${name}`}</div>
       {Object.keys(values).map((key) => {
         return (
           <div key={key} onClick={() => onSelectAlmaItem(key)}>
-            <span>@</span>
             <ItemComponent value={values[key]} />
           </div>
         );
       })}
-    </>
+    </ChoiceListWrapper>
   );
 };
 

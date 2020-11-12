@@ -18,7 +18,26 @@ import {
   AllCheckedContext,
   IsMarkAsContext,
 } from '../../store/IssuesListStore';
+import styled from 'styled-components';
+import { randomRGB } from '../../../style/randomNeonRGB';
 
+const Tab = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: ${randomRGB()};
+  padding: 10px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+`;
+
+const FilterStyle = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const AlmaStyle = styled.div`
+  display: flex;
+`;
 const IssueList = () => {
   const { reloadDispatch } = useContext(ReloadContext);
   const { issues } = useContext(IssuesContext);
@@ -93,15 +112,21 @@ const IssueList = () => {
           <IsCheckAllContext.Provider value={{ isCheckAll }}>
             <CheckedIssuesContext.Provider value={{ checkedIssues, checkedIssuesDispatch }}>
               <IsQueryContext.Provider value={{ isQueryDispatch }}>
-                <TopFilter />
+                <Tab>
+                  <FilterStyle>
+                    <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
+                    <TopFilter />
+                  </FilterStyle>
+                  <AlmaStyle>
+                    {isMarkAs && <MarkAs />}
+                    {!isMarkAs && <Alma users={mappedUsers} labels={mappedLabels} milestones={mappedMilestones} />}
+                  </AlmaStyle>
+                </Tab>
                 {isQuery && (
                   <button type="button" onClick={onClickReset}>
                     Clear current search query, filters, and sorts
                   </button>
                 )}
-                <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-                {isMarkAs && <MarkAs />}
-                {!isMarkAs && <Alma users={mappedUsers} labels={mappedLabels} milestones={mappedMilestones} />}
                 {issues.map((issue) => (
                   <IssueListItem key={issue.id} issueMetaData={getMetaData(issue)} />
                 ))}
