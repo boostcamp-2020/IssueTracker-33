@@ -30,7 +30,7 @@ const EditButton = styled(BasicButton)`
   }
 `;
 
-const CommentWrapper = ({ comment, isOwner, isWriter }) => {
+const CommentWrapper = ({ comment, isOwner, isWriter, writerName, writerImage }) => {
   const [description, setDescription] = useState(comment.description);
   const [isDescription, setIsDescription] = useState(true);
 
@@ -50,13 +50,7 @@ const CommentWrapper = ({ comment, isOwner, isWriter }) => {
       {isDescription ? (
         <Comment description={description} />
       ) : (
-        <CommentForm
-          description={description}
-          setDescription={setDescription}
-          setIsDescription={setIsDescription}
-          isEdit
-          commentId={comment.id}
-        />
+        <CommentForm description={description} setDescription={setDescription} setIsDescription={setIsDescription} isEdit commentId={comment.id} />
       )}
     </CommentWrapperDiv>
   );

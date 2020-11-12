@@ -1,4 +1,29 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const NewIssueListWrapper = styled.div`
+  border: 1px solid var(--border-gray);
+  border-radius: 5px;
+  position: absolute;
+  right: 0px;
+  width: 105%;
+  z-index: 1;
+  background-color: white;
+  overflow: hidden;
+`;
+
+const ListItem = styled.div`
+  border-bottom: 1px solid var(--border-gray);
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background-color: var(--tab-blue);
+    color: var(--font-white);
+  }
+  padding: 5px 10px;
+  cursor: pointer;
+`;
 
 const NewIssueList = ({ selected, setSelected, data }) => {
   const onUpdateSelection = (e, row) => {
@@ -12,13 +37,13 @@ const NewIssueList = ({ selected, setSelected, data }) => {
   };
 
   return (
-    <div>
+    <NewIssueListWrapper>
       {data.map((row) => (
-        <div key={row.id} onClick={(e) => onUpdateSelection(e, row)}>
+        <ListItem key={row.id} onClick={(e) => onUpdateSelection(e, row)}>
           {row.username || row.name || row.title}
-        </div>
+        </ListItem>
       ))}
-    </div>
+    </NewIssueListWrapper>
   );
 };
 

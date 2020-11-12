@@ -14,8 +14,8 @@ const GlobalStyle = createGlobalStyle`
 		--owner-blue: #F0F8FE;
 		--tab-blue: #0466D6;
 		--font-white: #FAFBFC;
+		--font-gray: #586069;
 	}
-
 
 	body {
 		font-family: 'Open Sans', sans-serif;

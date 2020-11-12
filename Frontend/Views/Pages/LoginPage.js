@@ -78,7 +78,7 @@ const SubmitText = styled.div`
 
 const LoginPage = () => {
   const githubOauth = () => {
-    window.location.href = 'http://localhost:3000/auth/github';
+    window.location.href = `${process.env.API_URL}/auth/github`;
   };
 
   return (
