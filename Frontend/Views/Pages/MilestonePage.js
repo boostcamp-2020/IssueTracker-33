@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Milestone from '../Components/Milestone/Milestone';
+import LabelMilestoneTabs from '../Components/LabelMilestoneTabs';
 
 const MilestonePage = () => {
   const [milestoneList, setMilestoneList] = useState([]);
@@ -26,8 +27,7 @@ const MilestonePage = () => {
 
   return (
     <div>
-      <Link to="/labels">labels</Link>
-      <Link to="/milestones">milestones</Link>
+      <LabelMilestoneTabs />
       <Link to="/milestones/new">new Milestone</Link>
 
       <button type="button" onClick={onOpenBtnClick}>
