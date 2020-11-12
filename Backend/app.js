@@ -23,4 +23,6 @@ app.use('/api/v1', tokenCheck, router);
 app.get('/auth/github', passport.authenticate('github', { session: false }));
 app.get('/auth/github/callback', passport.authenticate('github', { session: false }), tokenAllocate);
 
+console.log(process.env.NODE_ENV);
+
 app.listen(3000);

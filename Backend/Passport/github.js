@@ -8,7 +8,7 @@ module.exports = () => {
       {
         clientID: process.env.GITHUB_ACCESS_ID,
         clientSecret: process.env.GITHUB_ACCESS_SECRET,
-        callbackURL: 'http://localhost:3000/auth/github/callback',
+        callbackURL: `${process.env.PROD_API_SERVER}:3000/auth/github/callback`,
       },
 
       async (accessToken, refreshToken, profile, done) => {

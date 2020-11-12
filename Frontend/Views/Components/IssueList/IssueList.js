@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 import IssueListItem from './IssueListItem';
 import TopFilter from './TopFilter';
 import MarkAs from './MarkAs';
@@ -18,8 +19,7 @@ import {
   AllCheckedContext,
   IsMarkAsContext,
 } from '../../store/IssuesListStore';
-import styled from 'styled-components';
-import { randomRGB } from '../../../style/randomNeonRGB';
+import { CustomButton, randomRGB } from '../../../style/Neon';
 
 const Tab = styled.div`
   display: flex;
@@ -122,11 +122,7 @@ const IssueList = () => {
                     {!isMarkAs && <Alma users={mappedUsers} labels={mappedLabels} milestones={mappedMilestones} />}
                   </AlmaStyle>
                 </Tab>
-                {isQuery && (
-                  <button type="button" onClick={onClickReset}>
-                    Clear current search query, filters, and sorts
-                  </button>
-                )}
+                {isQuery && <CustomButton onClick={onClickReset}>Clear current search query, filters, and sorts</CustomButton>}
                 {issues.map((issue) => (
                   <IssueListItem key={issue.id} issueMetaData={getMetaData(issue)} />
                 ))}

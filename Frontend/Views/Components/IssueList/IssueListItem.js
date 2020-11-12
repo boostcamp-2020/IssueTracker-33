@@ -2,11 +2,13 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { CheckedIssuesContext, IsCheckAllContext, AllCheckedContext, IsMarkAsContext } from '../../store/IssuesListStore';
-import { randomRGB } from '../../../style/randomNeonRGB';
+import { randomRGB } from '../../../style/Neon';
 
 const TitleBox = styled.div`
   width: 100%;
   display: flex;
+  text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #ff00de, 0 0 7px #ff00de, 0 0 8px #ff00de, 0 0 10px #ffffff, 0 0 15px #ffffff;
+  font-weight: bolder;
 `;
 
 const LabelStyle = styled.div`
@@ -16,18 +18,19 @@ const LabelStyle = styled.div`
   font-size: 15px;
 `;
 
+const bodyColor = randomRGB();
+
 const IssueHeader = styled.div`
   position: relative;
   align-items: center;
   font-size: 18px;
   display: flex;
-  background-color: pink;
+  background-color: ${bodyColor};
   padding: 5px;
   border-top-left-radius: 5px;
   z-index: 0;
   border-top-right-radius: 5px;
   &:hover {
-    background-color: ${randomRGB()};
     color: white;
   }
 `;
@@ -35,7 +38,7 @@ const IssueHeader = styled.div`
 const IssueWrapper = styled.div`
   margin-top: 10px;
   padding: 5px;
-  background-color: ${randomRGB()};
+  background-color: ${bodyColor};
   border-radius: 10px;
 `;
 
@@ -126,7 +129,7 @@ const IssueListItem = ({ issueMetaData }) => {
           <span>{issue.isOpen ? 'opened ' : 'closed '}</span>
           <span>{`${issue.createdAt} by `}</span>
           <span>{author.username}</span>
-          <span>{milestone && '🍗' + milestone.title}</span>
+          <span>{milestone && ` 🍗 ${milestone.title}`}</span>
         </DescriptionDiv>
         <AssingeeDiv>
           {assignees.map((assignee) => (

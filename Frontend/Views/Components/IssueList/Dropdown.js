@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import useClickOutside from '../Modal';
 import ChoiceList from './ChoiceList';
-
+import { CustomButton } from '../../../style/Neon';
 const DropdownWrapper = styled.div`
   position: relative;
 `;
@@ -20,9 +20,7 @@ const Dropdown = ({ name, values }) => {
   return (
     <DropdownWrapper>
       <div ref={domNode}>
-        <button type="button" onClick={onToggleDropdown}>
-          {name}
-        </button>
+        <CustomButton onClick={onToggleDropdown}>{name}</CustomButton>
         {isVisible && <ChoiceList name={name} values={values} onToggleDropdown={onToggleDropdown} />}
       </div>
     </DropdownWrapper>
