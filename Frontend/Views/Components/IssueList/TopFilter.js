@@ -4,6 +4,22 @@ import useClickOutside from '../Modal';
 import { getUserId } from '../../../Sources/user';
 import { ReloadContext } from '../../store/IssuesPageStore';
 import { IsQueryContext } from '../../store/IssuesListStore';
+import styled from 'styled-components';
+
+const TopFilterWrapper = styled.div`
+  position: relative;
+`;
+
+const FilterWrapper = styled.div`
+  position: absolute;
+  background-color: wheat;
+  border-radius: 5px;
+  width: 250px;
+  padding: 7px;
+  top: 50px;
+  right: 0px;
+  z-index: 1;
+`;
 
 const TopFilter = () => {
   const { reloadDispatch } = useContext(ReloadContext);
@@ -27,24 +43,24 @@ const TopFilter = () => {
   };
 
   return (
-    <>
+    <TopFilterWrapper>
       <div ref={domNode}>
         <button type="button" onClick={onToggleDropdown}>
           Filters
         </button>
         <input type="text" />
         {isVisible && (
-          <div>
+          <FilterWrapper>
             <div>Filter Issues</div>
             <div onClick={() => onClickFilter('open=1')}>Open Issues</div>
             <div onClick={() => onClickFilter(`author=${getUserId(document.cookie)}`)}>Your Issues</div>
             <div onClick={() => onClickFilter(`assignee=${getUserId(document.cookie)}`)}>Everything assigned to you</div>
             <div onClick={() => onClickFilter(`mentions=${getUserId(document.cookie)}`)}>Everything mentioning you</div>
             <div onClick={() => onClickFilter('open=0')}>Closed Issues</div>
-          </div>
+          </FilterWrapper>
         )}
       </div>
-    </>
+    </TopFilterWrapper>
   );
 };
 
