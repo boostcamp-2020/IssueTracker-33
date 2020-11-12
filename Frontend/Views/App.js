@@ -21,22 +21,24 @@ const App = () => {
   const [users, usersDispatch] = useReducer(usersReducer, '');
 
   useEffect(async () => {
-    const USER_URL = `${process.env.API_URL}/${process.env.API_VERSION}/users`;
-    const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
-    const MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones`;
+    if (window.location.href !== process.env.WEB_URL + '/') {
+      const USER_URL = `${process.env.API_URL}/${process.env.API_VERSION}/users`;
+      const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
+      const MILE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/milestones`;
 
-    const userProm = axios.get(USER_URL, { withCredentials: true });
-    const labelProm = axios.get(LABEL_URL, { withCredentials: true });
-    const mileProm = axios.get(MILE_URL, { withCredentials: true });
+      const userProm = axios.get(USER_URL, { withCredentials: true });
+      const labelProm = axios.get(LABEL_URL, { withCredentials: true });
+      const mileProm = axios.get(MILE_URL, { withCredentials: true });
 
-    try {
-      const [userResolve, labelResolve, mileResolve] = await Promise.all([userProm, labelProm, mileProm]);
+      try {
+        const [userResolve, labelResolve, mileResolve] = await Promise.all([userProm, labelProm, mileProm]);
 
-      milestonesDispatch({ type: 'setInitial', data: mileResolve.data });
-      labelsDispatch({ type: 'setInitial', data: labelResolve.data });
-      usersDispatch({ type: 'setInitial', data: userResolve.data });
-    } catch (err) {
-      window.location.href = process.env.WEB_URL;
+        milestonesDispatch({ type: 'setInitial', data: mileResolve.data });
+        labelsDispatch({ type: 'setInitial', data: labelResolve.data });
+        usersDispatch({ type: 'setInitial', data: userResolve.data });
+      } catch (err) {
+        window.location.href = process.env.WEB_URL;
+      }
     }
   }, []);
 

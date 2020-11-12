@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import useClickOutside from '../Modal';
-import getUserId from '../../../Sources/user';
+import { getUserId } from '../../../Sources/user';
 import { ReloadContext } from '../../store/IssuesPageStore';
 import { IsQueryContext } from '../../store/IssuesListStore';
 
