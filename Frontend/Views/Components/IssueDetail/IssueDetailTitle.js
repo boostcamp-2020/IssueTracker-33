@@ -1,6 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
 import ErrorMessage from '../ErrorMessage';
+import BasicButton from '../../../Sources/style';
+
+const IssueDetailHeader = styled.div`
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const IssueNumber = styled.span`
+  margin: 0 0 0 10px;
+  color: #6a737d;
+`;
+
+const CancelButton = styled(BasicButton)`
+  margin: 0 0 0 5px;
+`;
+
+const StatusTag = styled.div`
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 28px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fafbfc;
+  background-color: ${(props) => (props.children === 'Open' ? '#28a745' : '#d73a4a')};
+`;
 
 const IssueDetailTitle = ({ issueData, isOpen }) => {
   const [title, setTitle] = useState();
@@ -58,24 +86,30 @@ const IssueDetailTitle = ({ issueData, isOpen }) => {
 
   return (
     <>
-      {isEdit ? (
-        <input type="text" placeholder="Title" onChange={onChangeTitle} value={title} />
-      ) : (
+      <IssueDetailHeader>
+        {isEdit ? (
+          <input type="text" placeholder="Title" onChange={onChangeTitle} value={title} />
+        ) : (
+          title && (
+            <h1>
+              <span>{title}</span>
+              <IssueNumber>{`#${issueData.id}`}</IssueNumber>
+            </h1>
+          )
+        )}
         <div>
-          {title}
-          {`#${issueData.id}`}
+          <BasicButton type="button" onClick={onClickEdit} disabled={editDisabled}>
+            {isEdit ? 'Save' : 'Edit'}
+          </BasicButton>
+          {isEdit && (
+            <CancelButton type="button" onClick={onClickCancel}>
+              Cancel
+            </CancelButton>
+          )}
         </div>
-      )}
+      </IssueDetailHeader>
       {titleError && <ErrorMessage message="제목을 입력해주세요." />}
-      <button type="button" onClick={onClickEdit} disabled={editDisabled}>
-        {isEdit ? 'save' : 'edit'}
-      </button>
-      {isEdit && (
-        <button type="button" onClick={onClickCancel}>
-          cancel
-        </button>
-      )}
-      <div>{isOpen ? 'Open' : 'Close'}</div>
+      {isOpen && <StatusTag>{isOpen ? 'Open' : 'Closed'}</StatusTag>}
     </>
   );
 };
