@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LabelList from '../Components/Label/LabelList';
 import LabelForm from '../Components/Label/LabelForm';
 import { LabelsContext } from '../store/AppStore';
+import LabelMilestoneTabs from '../Components/LabelMilestoneTabs';
 
 const LabelPageWrapper = styled.div`
   width: 100%;
@@ -22,12 +22,7 @@ const LabelPage = () => {
     <>
       <LabelPageWrapper>
         <div>
-          <Link to="/labels">
-            <button type="button">Lables</button>
-          </Link>
-          <Link to="/milestones">
-            <button type="button">Milestones</button>
-          </Link>
+          <LabelMilestoneTabs />
           <button type="button" onClick={onToggleForm}>
             New Label
           </button>
