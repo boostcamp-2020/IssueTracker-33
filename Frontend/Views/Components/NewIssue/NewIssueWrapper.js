@@ -5,24 +5,25 @@ import NewIssueOption from '../NewIssueOption';
 
 const NewIssueWrapperWrapper = styled.div`
   display: flex;
-  padding: 30px;
+  justify-content: space-around;
+  padding: 30px 100px;
 `;
 
 const NewIssueWrapper = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedLabels, setSelectedLabels] = useState([]);
-  const [selecetedMiles, setSelecetedMiles] = useState([]);
+  const [selectedMiles, setSelectedMiles] = useState([]);
 
   return (
     <NewIssueWrapperWrapper>
-      <NewIssueForm selectedUsers={selectedUsers} selectedLabels={selectedLabels} selecetedMiles={selecetedMiles} />
+      <NewIssueForm selectedUsers={selectedUsers} selectedLabels={selectedLabels} selectedMiles={selectedMiles} />
       <NewIssueOption
         selectedUsers={selectedUsers}
         selectedLabels={selectedLabels}
-        selecetedMiles={selecetedMiles}
+        selectedMiles={selectedMiles}
         setSelectedUsers={setSelectedUsers}
         setSelectedLabels={setSelectedLabels}
-        setSelecetedMiles={setSelecetedMiles}
+        setSelectedMiles={setSelectedMiles}
       />
     </NewIssueWrapperWrapper>
   );

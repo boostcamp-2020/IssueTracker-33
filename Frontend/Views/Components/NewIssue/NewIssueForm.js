@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
+import BasicButton from '../../../style/buttonStyles';
 import MarkdownRender from '../MarkdownRender';
 import ErrorMessage from '../ErrorMessage';
 import { getUserImageLink } from '../../../Sources/user';
@@ -9,7 +10,6 @@ import UserPhotoBlock from '../UserPhotoBlock';
 
 const NewIssueFormWrapper = styled.div`
   display: flex;
-  width: 70%;
   > * {
     margin: 0px 10px;
   }
@@ -17,6 +17,60 @@ const NewIssueFormWrapper = styled.div`
 
 const NewIssueContentWrapper = styled.div`
   border: 1px solid var(--border-gray);
+  border-radius: 5px;
+  padding: 10px;
+`;
+
+const InputMarkdown = styled.div`
+  display: flex;
+`;
+
+const InputArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 100%;
+  margin: 10px 10px 10px 0px;
+  border: solid 1px var(--border-gray);
+  border-radius: 6px;
+`;
+
+const ImageInputLabel = styled.label`
+  width: 400px;
+  height: 30px;
+  padding: 6px 4px;
+  color: var(--login-gray);
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+`;
+
+const TitleTextarea = styled.input`
+  width: 395px;
+  padding: 10px;
+  border: none;
+  border-bottom: dashed 1px var(--border-gray);
+  outline: none;
+  resize: vertical;
+`;
+
+const CommentTextarea = styled.textarea`
+  width: 395px;
+  min-height: 100px;
+  max-height: 500px;
+  padding: 10px;
+  border: none;
+  border-bottom: dashed 1px var(--border-gray);
+  outline: none;
+  resize: vertical;
+`;
+
+const MarkdownBorder = styled.div`
+  width: 400px;
+  margin: 10px 0;
+  border: solid 1px var(--border-gray);
+  border-radius: 6px;
+  overflow: auto;
 `;
 
 const ButtonWrapper = styled.div`
@@ -24,9 +78,17 @@ const ButtonWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const MainTextWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+const CancelButton = styled(BasicButton)`
+  margin: 0 5px;
+`;
+
+const SubmitButton = styled(BasicButton)`
+  color: var(--font-white);
+  background-color: var(--button-green);
+  &:hover {
+    background-color: rgba(50, 198, 84, 0.6);
+    transition: 0.2s;
+  }
 `;
 
 const NewIssueForm = ({ selectedUsers, selecetdLabels, selectedMiles }) => {
@@ -115,28 +177,33 @@ const NewIssueForm = ({ selectedUsers, selecetdLabels, selectedMiles }) => {
     <NewIssueFormWrapper>
       <UserPhotoBlock imageLink={getUserImageLink(document.cookie)} />
       <NewIssueContentWrapper>
-        <div>
-          <input type="text" placeholder="Title" onChange={onChangeTitle} />
-          {titleError && <ErrorMessage message="제목을 입력해주세요." />}
-        </div>
-        <div>
-          <MainTextWrapper>
-            <textarea type="text" placeholder="Leave a comment" onChange={onChangeComment} value={comment} />
+        <InputMarkdown>
+          <InputArea>
+            <TitleTextarea type="text" placeholder="Title" onChange={onChangeTitle} />
+            <CommentTextarea type="text" placeholder="Leave a comment" onChange={onChangeComment} value={comment} />
+            <ImageInputLabel>
+              <input placeholder="Attach files by selecting here" type="file" accept="image/png, image/jpeg, image/jpg" onChange={onUploadImage} />
+              Attach files by clicking here.
+            </ImageInputLabel>
+          </InputArea>
+          <MarkdownBorder>
             <MarkdownRender comment={comment} />
-          </MainTextWrapper>
-          <input placeholder="Attach files by selecting here" type="file" accept="image/png, image/jpeg, image/jpg" onChange={onUploadImage} />
+          </MarkdownBorder>
+        </InputMarkdown>
+        <div>
+          {titleError && <ErrorMessage message="제목을 입력해주세요." />}
           {commentError && <ErrorMessage message="본문을 입력해주세요." />}
           {imageError && <ErrorMessage message="이미지 업로드에 실패했습니다." />}
         </div>
         <ButtonWrapper>
           <div />
           <div>
-            <button type="button" onClick={onClickCancel}>
+            <CancelButton type="button" onClick={onClickCancel}>
               Cancel
-            </button>
-            <button type="submit" onClick={onSubmitIssue} disabled={submitDisabled}>
+            </CancelButton>
+            <SubmitButton type="submit" onClick={onSubmitIssue} disabled={submitDisabled}>
               Submit new issue
-            </button>
+            </SubmitButton>
           </div>
         </ButtonWrapper>
       </NewIssueContentWrapper>

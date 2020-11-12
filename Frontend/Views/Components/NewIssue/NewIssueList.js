@@ -5,23 +5,24 @@ const NewIssueListWrapper = styled.div`
   border: 1px solid var(--border-gray);
   border-radius: 5px;
   position: absolute;
-  left: 0px;
-  width: 100%;
+  right: 0px;
+  width: 105%;
   z-index: 1;
   background-color: white;
   overflow: hidden;
 `;
 
 const ListItem = styled.div`
-  width: 100%;
   border-bottom: 1px solid var(--border-gray);
   &:last-child {
     border-bottom: none;
   }
   &:hover {
     background-color: var(--tab-blue);
+    color: var(--font-white);
   }
   padding: 5px 10px;
+  cursor: pointer;
 `;
 
 const NewIssueList = ({ selected, setSelected, data }) => {
