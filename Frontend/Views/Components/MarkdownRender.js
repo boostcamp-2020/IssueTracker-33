@@ -1,5 +1,12 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import styled from 'styled-components';
+
+const MarkdownWrapper = styled.div`
+  display: block;
+  padding: 15px;
+  max-height: 530px;
+`;
 
 const MarkdownRender = ({ comment }) => {
   const renderers = {
@@ -7,9 +14,9 @@ const MarkdownRender = ({ comment }) => {
   };
 
   return (
-    <>
+    <MarkdownWrapper>
       <ReactMarkdown source={comment} renderers={renderers} escapeHtml={false} />
-    </>
+    </MarkdownWrapper>
   );
 };
 
