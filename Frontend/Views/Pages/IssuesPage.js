@@ -5,7 +5,7 @@ import { issuesReducer, reloadReducer, IssuesContext, ReloadContext } from '../s
 
 const IssuesPage = () => {
   const [issues, issuesDispatch] = useReducer(issuesReducer, []);
-  const [reload, reloadDispatch] = useReducer(reloadReducer, []);
+  const [reload, reloadDispatch] = useReducer(reloadReducer, false);
 
   useEffect(async () => {
     const ISSUE_URL = `${process.env.API_URL}/${process.env.API_VERSION}/issues`;
@@ -14,7 +14,6 @@ const IssuesPage = () => {
     try {
       const issueResolve = await axios.get(`${ISSUE_URL}${queryString}`, { withCredentials: true });
       issuesDispatch({ type: 'setInitial', data: issueResolve.data });
-      reloadDispatch({ type: 'setInitial' });
     } catch (err) {
       window.location.href = process.env.WEB_URL;
     }

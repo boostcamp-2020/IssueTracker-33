@@ -10,8 +10,6 @@ const issuesReducer = (issues, { type, data }) => {
 
 const reloadReducer = (reload, { type }) => {
   switch (type) {
-    case 'setInitial':
-      return true;
     case 'switch':
       return !reload;
     default:
