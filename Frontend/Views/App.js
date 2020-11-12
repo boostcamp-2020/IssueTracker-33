@@ -9,6 +9,8 @@ import LabelPage from './Pages/LabelPage';
 import MilestonPage from './Pages/MilestonePage';
 import NewMilestonePage from './Pages/NewMilestonePage';
 
+import GlobalStyle from '../style/globalStyles';
+
 const App = () => {
   const history = useHistory();
 
@@ -18,6 +20,7 @@ const App = () => {
 
   return (
     <>
+      <GlobalStyle />
       <div onClick={onClickHeader}>Issues</div>
       <Route exact path="/" component={LoginPage} />
       <Route exact path="/issues" component={IssueMainPage} />
