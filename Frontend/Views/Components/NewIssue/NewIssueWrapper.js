@@ -3,24 +3,20 @@ import NewIssueForm from './NewIssueForm';
 import NewIssueOption from '../NewIssueOption';
 
 const NewIssueWrapper = () => {
-  const [userSelectedData, setUserSelectedData] = useState([]);
-  const [labelSelectedData, setLabelSelectedData] = useState([]);
-  const [mileSelectedData, setMileSelectedData] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedLabels, setSelectedLabels] = useState([]);
+  const [selecetedMiles, setSelecetedMiles] = useState([]);
 
   return (
     <>
-      <NewIssueForm
-        userSelectedData={userSelectedData}
-        labelSelectedData={labelSelectedData}
-        mileSelectedData={mileSelectedData}
-      />
+      <NewIssueForm selectedUsers={selectedUsers} selectedLabels={selectedLabels} selecetedMiles={selecetedMiles} />
       <NewIssueOption
-        userSelectedData={userSelectedData}
-        labelSelectedData={labelSelectedData}
-        mileSelectedData={mileSelectedData}
-        setUserSelectedData={setUserSelectedData}
-        setLabelSelectedData={setLabelSelectedData}
-        setMileSelectedData={setMileSelectedData}
+        selectedUsers={selectedUsers}
+        selectedLabels={selectedLabels}
+        selecetedMiles={selecetedMiles}
+        setSelectedUsers={setSelectedUsers}
+        setSelectedLabels={setSelectedLabels}
+        setSelecetedMiles={setSelecetedMiles}
       />
     </>
   );

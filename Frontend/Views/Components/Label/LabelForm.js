@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import getRandomColor from '../../../Sources/color';
+import { LabelsContext } from '../../store/AppStore';
 
-const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit }) => {
+const LabelForm = ({ setIsFormVisible, isEdit, labelToEdit }) => {
+  const { labelsDispatch } = useContext(LabelsContext);
   const [name, setName] = useState('');
   const [color, setColor] = useState(getRandomColor());
   const [description, setDescription] = useState('');
@@ -57,7 +59,7 @@ const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit })
     try {
       // TODO: 넣은 행에 대한 InsertId 받아오기
       const { data } = await axios.post(LABEL_URL, postData, { withCredentials: true });
-      setLabels([...labels, { ...postData, id: data.insertId }]);
+      labelsDispatch({ type: 'add', data: { ...postData, id: data.insertId } });
     } catch (err) {
       console.log(err.message);
     }
@@ -65,21 +67,11 @@ const LabelForm = ({ setIsFormVisible, labels, setLabels, isEdit, labelToEdit })
 
   const onClickEdit = async () => {
     const LABEL_URL = `${process.env.API_URL}/${process.env.API_VERSION}/labels`;
-    const postData = {
-      name,
-      description,
-      color,
-    };
+    const postData = { name, description, color };
+
     try {
       await axios.patch(`${LABEL_URL}/${labelToEdit.id}`, postData, { withCredentials: true });
-      setLabels(
-        labels.map((label) => {
-          if (label.id === labelToEdit.id) {
-            return Object.assign(label, postData);
-          }
-          return label;
-        }),
-      );
+      labelsDispatch({ type: 'targetUpdate', data: postData, target: labelToEdit.id });
     } catch (err) {
       console.log(err.message);
     }

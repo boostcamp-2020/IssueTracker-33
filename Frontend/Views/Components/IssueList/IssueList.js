@@ -1,92 +1,115 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
 import IssueListItem from './IssueListItem';
 import TopFilter from './TopFilter';
 import MarkAs from './MarkAs';
 import Alma from './Alma';
+import { MilestonesContext, LabelsContext, UsersContext } from '../../store/AppStore';
+import { IssuesContext, ReloadContext } from '../../store/IssuesPageStore';
+import {
+  isQueryReducer,
+  checkedIssuesReducer,
+  isCheckAllReducer,
+  allCheckedReducer,
+  isMarkAsReducer,
+  IsQueryContext,
+  CheckedIssuesContext,
+  IsCheckAllContext,
+  AllCheckedContext,
+  IsMarkAsContext,
+} from '../../store/IssuesListStore';
 
-const IssueList = ({ issues, users, labels, milestones, reloadIssue }) => {
-  const [checkedIssues, setCheckedIssues] = useState([]);
-  const [isCheckAll, setIsCheckAll] = useState(false);
-  const [allChecked, setAllChecked] = useState(false);
-  const [isMarkAs, setIsMarkAs] = useState(false);
-  const [resetQuery, setResetQuery] = useState(window.location.search !== '');
+const IssueList = () => {
+  const { reloadDispatch } = useContext(ReloadContext);
+  const { issues } = useContext(IssuesContext);
+  const { users } = useContext(UsersContext);
+  const { labels } = useContext(LabelsContext);
+  const { milestones } = useContext(MilestonesContext);
+
+  const [checkedIssues, checkedIssuesDispatch] = useReducer(checkedIssuesReducer, []);
+  const [isQuery, isQueryDispatch] = useReducer(isQueryReducer, window.location.search !== '');
+  const [isCheckAll, isCheckAllDispatch] = useReducer(isCheckAllReducer, false);
+  const [allChecked, allCheckedDispatch] = useReducer(allCheckedReducer, false);
+  const [isMarkAs, isMarkAsDispatch] = useReducer(isMarkAsReducer, false);
 
   const history = useHistory();
 
   useEffect(() => {
     if (checkedIssues.length === 0) {
-      setAllChecked(false);
-      setIsMarkAs(false);
+      allCheckedDispatch({ type: 'set', data: false });
+      isMarkAsDispatch({ type: 'set', data: false });
     } else if (checkedIssues.length === issues.length) {
-      setAllChecked(true);
-      setIsMarkAs(true);
+      allCheckedDispatch({ type: 'set', data: true });
+      isMarkAsDispatch({ type: 'set', data: true });
     } else if (checkedIssues.length > 0) {
-      setIsMarkAs(true);
+      isMarkAsDispatch({ type: 'set', data: true });
     }
   }, [checkedIssues]);
 
   const onCheckAll = () => {
     if (isCheckAll && !allChecked) {
-      setCheckedIssues(issues.map((issue) => issue.id));
-      setAllChecked(true);
+      checkedIssuesDispatch({ type: 'addAll', data: issues.map((issue) => issue.id) });
+      allCheckedDispatch({ type: 'set', data: true });
     } else if (isCheckAll) {
-      setIsCheckAll(false);
-      setCheckedIssues([]);
+      isCheckAllDispatch({ type: 'set', data: false });
+      checkedIssuesDispatch({ type: 'deleteAll' });
     } else {
-      setIsCheckAll(true);
-      setCheckedIssues(issues.map((issue) => issue.id));
+      isCheckAllDispatch({ type: 'set', data: true });
+      checkedIssuesDispatch({ type: 'addAll', data: issues.map((issue) => issue.id) });
     }
   };
 
   const onClickReset = () => {
-    setResetQuery(false);
+    isQueryDispatch({ type: 'switch', data: false });
     history.push('/issues');
-    reloadIssue();
+    reloadDispatch({ type: 'switch' });
+  };
+
+  const toKeyValueMap = (records) => {
+    if (!records) return;
+    const map = {};
+    records.forEach((record) => {
+      map[record.id] = record;
+    });
+    return map;
+  };
+  const mappedUsers = toKeyValueMap(users);
+  const mappedLabels = toKeyValueMap(labels);
+  const mappedMilestones = toKeyValueMap(milestones);
+  const getMetaData = (issue) => {
+    return {
+      issue,
+      author: mappedUsers[issue.userId],
+      labels: issue.labels.map((id) => mappedLabels[id]),
+      assignees: issue.assignees.map((id) => mappedUsers[id]),
+      milestone: mappedMilestones[issue.milestoneId],
+    };
   };
 
   return (
     <div>
-      <TopFilter reloadIssue={reloadIssue} setResetQuery={setResetQuery} />
-      {resetQuery && (
-        <button type="button" onClick={onClickReset}>
-          Clear current search query, filters, and sorts
-        </button>
-      )}
-      <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-      {isMarkAs && (
-        <MarkAs
-          reloadIssue={reloadIssue}
-          checkedIssues={checkedIssues}
-          setIsMarkAs={setIsMarkAs}
-          setAllChecked={setAllChecked}
-        />
-      )}
-      {!isMarkAs && (
-        <Alma
-          reloadIssue={reloadIssue}
-          users={users}
-          labels={labels}
-          milestones={milestones}
-          setResetQuery={setResetQuery}
-        />
-      )}
-      {issues.map((issue) => (
-        <IssueListItem
-          key={issue.id}
-          issue={issue}
-          author={users[issue.userId]}
-          labels={issue.labels.map((id) => labels[id])}
-          assignees={issue.assignees.map((id) => users[id])}
-          milestone={milestones[issue.milestoneId]}
-          setCheckedIssues={setCheckedIssues}
-          checkedIssues={checkedIssues}
-          isCheckAll={isCheckAll}
-          setAllChecked={setAllChecked}
-          allChecked={allChecked}
-          isMarkAs={isMarkAs}
-        />
-      ))}
+      <IsMarkAsContext.Provider value={{ isMarkAs, isMarkAsDispatch }}>
+        <AllCheckedContext.Provider value={{ allChecked, allCheckedDispatch }}>
+          <IsCheckAllContext.Provider value={{ isCheckAll }}>
+            <CheckedIssuesContext.Provider value={{ checkedIssues, checkedIssuesDispatch }}>
+              <IsQueryContext.Provider value={{ isQueryDispatch }}>
+                <TopFilter />
+                {isQuery && (
+                  <button type="button" onClick={onClickReset}>
+                    Clear current search query, filters, and sorts
+                  </button>
+                )}
+                <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
+                {isMarkAs && <MarkAs />}
+                {!isMarkAs && <Alma users={mappedUsers} labels={mappedLabels} milestones={mappedMilestones} />}
+                {issues.map((issue) => (
+                  <IssueListItem key={issue.id} issueMetaData={getMetaData(issue)} />
+                ))}
+              </IsQueryContext.Provider>
+            </CheckedIssuesContext.Provider>
+          </IsCheckAllContext.Provider>
+        </AllCheckedContext.Provider>
+      </IsMarkAsContext.Provider>
     </div>
   );
 };
