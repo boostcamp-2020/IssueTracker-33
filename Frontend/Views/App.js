@@ -8,7 +8,14 @@ import LoginPage from './Pages/LoginPage';
 import LabelPage from './Pages/LabelPage';
 import MilestonPage from './Pages/MilestonePage';
 import NewMilestonePage from './Pages/NewMilestonePage';
-import { milestonesReducer, labelsReducer, usersReducer, MilestonesContext, LabelsContext, UsersContext } from './store/AppStore';
+import {
+  milestonesReducer,
+  labelsReducer,
+  usersReducer,
+  MilestonesContext,
+  LabelsContext,
+  UsersContext,
+} from './store/AppStore';
 import Header from './Components/Header';
 
 import GlobalStyle from '../style/globalStyles';
@@ -46,12 +53,11 @@ const App = () => {
   }, []);
 
   return (
-<<<<<<< HEAD
     <LabelsContext.Provider value={{ labels, labelsDispatch }}>
       <UsersContext.Provider value={{ users, usersDispatch }}>
         <MilestonesContext.Provider value={{ milestones, milestonesDispatch }}>
           <GlobalStyle />
-          <div onClick={onClickHeader}>Issues</div>
+          <Header onClick={onClickHeader}>Issues</Header>
           <Route exact path="/" component={LoginPage} />
           <Route exact path="/issues" component={IssueMainPage} />
           <Switch>
@@ -66,23 +72,6 @@ const App = () => {
         </MilestonesContext.Provider>
       </UsersContext.Provider>
     </LabelsContext.Provider>
-=======
-    <>
-      <GlobalStyle />
-      <Header onClick={onClickHeader}>Issues</Header>
-      <Route exact path="/" component={LoginPage} />
-      <Route exact path="/issues" component={IssueMainPage} />
-      <Switch>
-        <Route exact path="/issues/new" component={NewIssuePage} />
-        <Route exact path="/issues/:issueId" component={IssueDetailPage} />
-      </Switch>
-      <Switch>
-        <Route exact path="/milestones" component={MilestonPage} />
-        <Route exact path="/milestones/new" component={NewMilestonePage} />
-      </Switch>
-      <Route exact path="/labels" component={LabelPage} />
-    </>
->>>>>>> [FEAT] add Header style
   );
 };
 export default App;
