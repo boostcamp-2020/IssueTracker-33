@@ -63,20 +63,14 @@ const IssueDetailWrapper = ({ issueId }) => {
       <IssueDetailTitle issueData={issueData} isOpen={isOpen} />
       <CommentList commentsData={commentsData} owner={issueData.userId} />
       <NewIssueOption
-        userSelectedData={userSelectedData}
-        labelSelectedData={labelSelectedData}
-        mileSelectedData={mileSelectedData}
-        setUserSelectedData={setUserSelectedData}
-        setLabelSelectedData={setLabelSelectedData}
-        setMileSelectedData={setMileSelectedData}
+        selectedUsers={userSelectedData}
+        selectedLabels={labelSelectedData}
+        selectedMiles={mileSelectedData}
+        setSelectedUsers={setUserSelectedData}
+        setSelectedLabels={setLabelSelectedData}
+        setSelectedMiles={setMileSelectedData}
       />
-      <CommentForm
-        issueId={issueId}
-        commentsData={commentsData}
-        setCommentsData={setCommentsData}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      />
+      <CommentForm issueId={issueId} commentsData={commentsData} setCommentsData={setCommentsData} isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
 };
