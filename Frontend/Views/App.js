@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
-import { useHistory, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import NewIssuePage from './Pages/NewIssuePage';
 import IssueMainPage from './Pages/IssueMainPage';
 import IssueDetailPage from './Pages/IssueDetailPage';
@@ -8,16 +8,19 @@ import LoginPage from './Pages/LoginPage';
 import LabelPage from './Pages/LabelPage';
 import MilestonPage from './Pages/MilestonePage';
 import NewMilestonePage from './Pages/NewMilestonePage';
-import { milestonesReducer, labelsReducer, usersReducer, MilestonesContext, LabelsContext, UsersContext } from './store/AppStore';
+import {
+  milestonesReducer,
+  labelsReducer,
+  usersReducer,
+  MilestonesContext,
+  LabelsContext,
+  UsersContext,
+} from './store/AppStore';
+import Header from './Components/Header';
 
 import GlobalStyle from '../style/globalStyles';
 
 const App = () => {
-  const history = useHistory();
-
-  const onClickHeader = () => {
-    history.push('/issues');
-  };
   const [milestones, milestonesDispatch] = useReducer(milestonesReducer, '');
   const [labels, labelsDispatch] = useReducer(labelsReducer, '');
   const [users, usersDispatch] = useReducer(usersReducer, '');
@@ -49,7 +52,7 @@ const App = () => {
       <UsersContext.Provider value={{ users, usersDispatch }}>
         <MilestonesContext.Provider value={{ milestones, milestonesDispatch }}>
           <GlobalStyle />
-          <div onClick={onClickHeader}>Issues</div>
+          <Header>Issues</Header>
           <Route exact path="/" component={LoginPage} />
           <Route exact path="/issues" component={IssueMainPage} />
           <Switch>
