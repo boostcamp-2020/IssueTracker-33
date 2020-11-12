@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 import IssueListItem from './IssueListItem';
 import TopFilter from './TopFilter';
 import MarkAs from './MarkAs';
@@ -18,13 +19,33 @@ import {
   AllCheckedContext,
   IsMarkAsContext,
 } from '../../store/IssuesListStore';
+import { CustomButton, randomRGB } from '../../../style/Neon';
 
+const Tab = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: ${randomRGB()};
+  padding: 10px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+`;
+
+const FilterStyle = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const AlmaStyle = styled.div`
+  display: flex;
+`;
 const IssueList = () => {
   const { reloadDispatch } = useContext(ReloadContext);
   const { issues } = useContext(IssuesContext);
   const { users } = useContext(UsersContext);
   const { labels } = useContext(LabelsContext);
   const { milestones } = useContext(MilestonesContext);
+
+  const [fulfilled, setFulfilled] = useState(false);
 
   const [checkedIssues, checkedIssuesDispatch] = useReducer(checkedIssuesReducer, []);
   const [isQuery, isQueryDispatch] = useReducer(isQueryReducer, window.location.search !== '');
@@ -33,6 +54,12 @@ const IssueList = () => {
   const [isMarkAs, isMarkAsDispatch] = useReducer(isMarkAsReducer, false);
 
   const history = useHistory();
+
+  useEffect(() => {
+    if (issues.length && milestones && labels && users) {
+      setFulfilled(true);
+    }
+  }, [issues, milestones, labels, users]);
 
   useEffect(() => {
     if (checkedIssues.length === 0) {
@@ -80,8 +107,8 @@ const IssueList = () => {
     return {
       issue,
       author: mappedUsers[issue.userId],
-      labels: issue.labels.map((id) => mappedLabels[id]),
-      assignees: issue.assignees.map((id) => mappedUsers[id]),
+      labels: issue.labels?.map((id) => mappedLabels[id]),
+      assignees: issue.assignees?.map((id) => mappedUsers[id]),
       milestone: mappedMilestones[issue.milestoneId],
     };
   };
@@ -93,18 +120,18 @@ const IssueList = () => {
           <IsCheckAllContext.Provider value={{ isCheckAll }}>
             <CheckedIssuesContext.Provider value={{ checkedIssues, checkedIssuesDispatch }}>
               <IsQueryContext.Provider value={{ isQueryDispatch }}>
-                <TopFilter />
-                {isQuery && (
-                  <button type="button" onClick={onClickReset}>
-                    Clear current search query, filters, and sorts
-                  </button>
-                )}
-                <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
-                {isMarkAs && <MarkAs />}
-                {!isMarkAs && <Alma users={mappedUsers} labels={mappedLabels} milestones={mappedMilestones} />}
-                {issues.map((issue) => (
-                  <IssueListItem key={issue.id} issueMetaData={getMetaData(issue)} />
-                ))}
+                <Tab>
+                  <FilterStyle>
+                    <input type="checkbox" onChange={onCheckAll} checked={allChecked} />
+                    <TopFilter />
+                  </FilterStyle>
+                  <AlmaStyle>
+                    {isMarkAs && <MarkAs />}
+                    {!isMarkAs && <Alma users={mappedUsers} labels={mappedLabels} milestones={mappedMilestones} />}
+                  </AlmaStyle>
+                </Tab>
+                {isQuery && <CustomButton onClick={onClickReset}>Clear current search query, filters, and sorts</CustomButton>}
+                {fulfilled && issues.map((issue) => <IssueListItem key={issue.id} issueMetaData={getMetaData(issue)} />)}
               </IsQueryContext.Provider>
             </CheckedIssuesContext.Provider>
           </IsCheckAllContext.Provider>

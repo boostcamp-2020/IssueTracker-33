@@ -16,7 +16,6 @@ const GlobalStyle = createGlobalStyle`
 		--font-white: #FAFBFC;
 	}
 
-
 	body {
 		font-family: 'Open Sans', sans-serif;
 		margin: 0;
