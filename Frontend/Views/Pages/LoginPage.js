@@ -27,7 +27,7 @@ const LoginWrapper = styled.div`
 const InputWrapper = styled.div`
   width: 400px;
   height: 350px;
-  border: 1px solid #aaaaaa;
+  border: 1px solid var(--border-gray);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -45,14 +45,14 @@ const Input = styled.input`
   width: 300px;
   height: 35px;
   border-radius: 5px;
-  border: 1px solid #aaaaaa;
+  border: 1px solid var(--border-gray);
 `;
 
 const GithubLogin = styled.button`
   width: 300px;
   height: 35px;
   margin-top: 30px;
-  background-color: #888888;
+  background-color: var(--login-gray);
   box-shadow: none;
   border-radius: 5px;
   display: flex;
