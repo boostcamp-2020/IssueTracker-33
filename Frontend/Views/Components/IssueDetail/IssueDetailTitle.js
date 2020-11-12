@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import ErrorMessage from '../ErrorMessage';
-import BasicButton from '../../../Sources/style';
+import BasicButton from '../../../style/buttonStyles';
+
+const IssueDetailTitlePad = styled.div`
+  margin: 10px;
+`;
 
 const IssueDetailHeader = styled.div`
   height: 80px;
@@ -13,7 +17,7 @@ const IssueDetailHeader = styled.div`
 
 const IssueNumber = styled.span`
   margin: 0 0 0 10px;
-  color: #6a737d;
+  color: var(--login-gray);
 `;
 
 const CancelButton = styled(BasicButton)`
@@ -26,8 +30,17 @@ const StatusTag = styled.div`
   border-radius: 28px;
   font-size: 14px;
   font-weight: 500;
-  color: #fafbfc;
-  background-color: ${(props) => (props.children === 'Open' ? '#28a745' : '#d73a4a')};
+  color: var(--font-white);
+  background-color: ${(props) => (props.children === 'Open' ? `var(--open-green)` : `var(--closed-red)`)};
+`;
+
+const TitleInput = styled.input`
+  width: 900px;
+  padding: 10px;
+  &:focus {
+    border: none;
+    outline: solid 2px var(--tab-blue);
+  }
 `;
 
 const IssueDetailTitle = ({ issueData, isOpen }) => {
@@ -85,10 +98,10 @@ const IssueDetailTitle = ({ issueData, isOpen }) => {
   };
 
   return (
-    <>
+    <IssueDetailTitlePad>
       <IssueDetailHeader>
         {isEdit ? (
-          <input type="text" placeholder="Title" onChange={onChangeTitle} value={title} />
+          <TitleInput type="text" placeholder="Title" onChange={onChangeTitle} value={title} />
         ) : (
           title && (
             <h1>
@@ -109,8 +122,8 @@ const IssueDetailTitle = ({ issueData, isOpen }) => {
         </div>
       </IssueDetailHeader>
       {titleError && <ErrorMessage message="제목을 입력해주세요." />}
-      {isOpen && <StatusTag>{isOpen ? 'Open' : 'Closed'}</StatusTag>}
-    </>
+      {(isOpen === 0 || isOpen === 1) && <StatusTag>{isOpen ? 'Open' : 'Closed'}</StatusTag>}
+    </IssueDetailTitlePad>
   );
 };
 
