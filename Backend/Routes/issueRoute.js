@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     );
     const { insertId } = insertResult[0];
     // comment 추가
-    const commentValues = [1, insertId, comment];
+    const commentValues = [userId, insertId, comment];
     await conn.query('INSERT INTO comments(userId, issueId, description) VALUES(?, ?, ?)', commentValues);
     // 있을 때만 작업해줄 데이터!
     // labels (관계테이블), 반복문
