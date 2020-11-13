@@ -91,7 +91,7 @@ const SubmitButton = styled(BasicButton)`
   }
 `;
 
-const NewIssueForm = ({ selectedUsers, selecetdLabels, selectedMiles }) => {
+const NewIssueForm = ({ selectedUsers, selectedLabels, selectedMiles }) => {
   const history = useHistory();
 
   const [title, setTitle] = useState('');
@@ -111,12 +111,11 @@ const NewIssueForm = ({ selectedUsers, selecetdLabels, selectedMiles }) => {
       title,
       comment,
       milestoneId: selectedMiles?.map((elem) => elem.id)[0],
-      labels: selecetdLabels?.map((elem) => elem.id),
+      labels: selectedLabels?.map((elem) => elem.id),
       assignees: selectedUsers?.map((elem) => elem.id),
     };
     try {
       await axios.post(ISSUE_URL, postData, { withCredentials: true });
-      // issuesDispatch({type:'add',data:postData})
       window.location.href = `${process.env.WEB_URL}/issues`;
     } catch (err) {
       window.location.href = process.env.WEB_URL;
